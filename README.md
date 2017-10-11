@@ -1,6 +1,6 @@
 ﻿# AI Connect Four
 
-This is a continuation of an existing python-implementation of 4connect https://github.com/EpocDotFr/connectfour/issues
+This is a fork of an existing python-implementation of Connect Four from https://github.com/EpocDotFr/connectfour/issues
 
 ## Improvements:
 - Added faster win-condition checking (does not check the whole board after one chip has been played)
@@ -9,7 +9,7 @@ This is a continuation of an existing python-implementation of 4connect https://
 
 - This game is going to get an AI-opponent
 
-# Connect Four
+# From EpocDotFr's Connect Four page:
 
 The [Connect Four](https://en.wikipedia.org/wiki/Connect_Four) game, implemented in Python.
 
