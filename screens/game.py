@@ -208,7 +208,7 @@ class Game:
                 break
         return self.clear_consecutive_chips_if_false(chip_count >= 4)
 
-    def has_current_player_won(self):
+    def has_current_player_won(self) -> bool:
         """
         Checks if the current player wins the game.
         This method performs the checks on the whole board in all possible
@@ -218,7 +218,7 @@ class Game:
         return self.check_horizontal_win() or self.check_vertical_win() or \
             self.check_diagonal_left_to_right() or self.check_diagonal_right_to_left()
 
-    def did_no_one_win(self):
+    def did_no_one_win(self) -> bool:
         """Check if no one win the game.
 
         This method checks every single cell. If all are filled, no one win."""
