@@ -18,7 +18,7 @@ LAN_PORT = 2560
 LAN_TIMEOUT = 5
 
 # When frozen by PyInstaller, the path to the resources is different
-RESOURCES_ROOT = os.path.join(sys._MEIPASS, 'resources') if getattr(sys, 'frozen', False) else 'resources'
+RESOURCES_ROOT = os.path.join(sys.MEIPASS, 'resources') if getattr(sys, 'frozen', False) else 'resources'
 
 CONFIG_FILE = 'connectfour.ini'
 DEFAULT_CONFIG = {
@@ -27,6 +27,17 @@ DEFAULT_CONFIG = {
     'music_volume': 0.2,
     'game_name': ''
 }
+
+PLAYER_RED_NAME = 'Red'
+PLAYER_RED_ID = 'RED'
+
+PLAYER_YELLOW_NAME = 'Yellow'
+PLAYER_YELLOW_ID = 'YELLOW'
+
+RED_CHIP_IMAGE = 'red_chip.png'
+YELLOW_CHIP_IMAGE = 'yellow_chip.png'
+
+GAME_NAME = 'AI Connect Four v'
 
 
 class GuiTheme(gui.DefaultTheme):

@@ -6,6 +6,7 @@ import settings
 import utils
 import logging
 import sys
+import time
 
 
 class Game:
@@ -13,6 +14,7 @@ class Game:
         logging.info('Initializing game')
 
         self.app = app
+        self.last_chip_pos = None
 
         self.chips = pygame.sprite.Group()
         self.current_consecutive_chips = deque(maxlen=4)
@@ -70,10 +72,9 @@ class Game:
 
         utils.load_random_music(['techno_dreaming.wav', 'techno_celebration.wav', 'electric_rain.wav', 'snake_trance.wav'], volume=self.musics_volume)
 
-    def is_valid_position(self, x, y):
+    def is_valid_position(self, x, y) -> bool:
         if x < 0 or x > settings.COLS - 1 or y < 0 or y > settings.ROWS - 1:
             return False
-
         return True
 
     def compute_direction_pos(self, x, y, direction):
@@ -110,106 +111,112 @@ class Game:
         for chips_position in list(self.current_consecutive_chips):
             self.highlighted_chips[chips_position[0]][chips_position[1]] = True
 
-    def did_i_win(self):
-        """Check if the current player win the game.
+    def clear_consecutive_chips_if_false(self, condition: bool) -> bool:
+        if not condition:
+            self.current_consecutive_chips.clear()
+        return condition
 
-        This method performs the checks on the whole board in all possible direction until 4 consecutive chips are found
+    def check_horizontal_win(self) -> bool:
+        self.current_consecutive_chips.append(self.last_chip_pos)
+        chip_x, chip_y = self.last_chip_pos
+        space_right = settings.COLS - chip_x - 1
+        chip_count = 1
+        # check right chips
+        if space_right:
+            for x in range(chip_x + 1, chip_x + space_right + 1):
+                if self.board[x][chip_y] == self.current_player.name:
+                    chip_count += 1
+                    self.current_consecutive_chips.append((x, chip_y))
+                else:
+                    break
+        # check left chips
+        if chip_x:
+            for x in range(chip_x - 1, -1, -1):
+                if self.board[x][chip_y] == self.current_player.name:
+                    chip_count += 1
+                    self.current_consecutive_chips.append((x, chip_y))
+                else:
+                    break
+        return self.clear_consecutive_chips_if_false(chip_count >= 4)
+
+    def check_vertical_win(self) -> bool:
+        self.current_consecutive_chips.append(self.last_chip_pos)
+        chip_x, chip_y = self.last_chip_pos
+        chip_count = 1
+        # check chips from the top to bottom
+        for y in range(chip_y + 1, settings.ROWS):
+            if self.board[chip_x][y] == self.current_player.name:
+                self.current_consecutive_chips.append((chip_x, y))
+                chip_count += 1
+            else:
+                break
+        return self.clear_consecutive_chips_if_false(chip_count >= 4)
+
+    def check_diagonal_left_to_right(self) -> bool:
+        self.current_consecutive_chips.append(self.last_chip_pos)
+        # check the chips which are "over" the current chip
+        chip_x, chip_y = self.last_chip_pos
+        chip_count = 1
+        x = chip_x + 1
+        y = chip_y - 1
+        while self.is_valid_position(x, y):
+            if self.board[x][y] == self.current_player.name:
+                chip_count += 1
+                self.current_consecutive_chips.append((x, y))
+                x += 1
+                y -= 1
+            else:
+                break
+        # check the chips which are "under" the current chip
+        x = chip_x - 1
+        y = chip_y + 1
+        while self.is_valid_position(x, y):
+            if self.board[x][y] == self.current_player.name:
+                chip_count += 1
+                self.current_consecutive_chips.append((x, y))
+                x -= 1
+                y += 1
+            else:
+                break
+        return self.clear_consecutive_chips_if_false(chip_count >= 4)
+
+    def check_diagonal_right_to_left(self) -> bool:
+        self.current_consecutive_chips.append(self.last_chip_pos)
+        # check the chips which are "under" the current chip
+        chip_x, chip_y = self.last_chip_pos
+        chip_count = 1
+        # check the chips which are "over" the current chip
+        x = chip_x - 1
+        y = chip_y - 1
+        while self.is_valid_position(x, y):
+            if self.board[x][y] == self.current_player.name:
+                chip_count += 1
+                self.current_consecutive_chips.append((x, y))
+                x -= 1
+                y -= 1
+            else:
+                break
+        x = chip_x + 1
+        y = chip_y + 1
+        while self.is_valid_position(x, y):
+            if self.board[x][y] == self.current_player.name:
+                chip_count += 1
+                self.current_consecutive_chips.append((x, y))
+                x += 1
+                y += 1
+            else:
+                break
+        return self.clear_consecutive_chips_if_false(chip_count >= 4)
+
+    def has_current_player_won(self):
+        """
+        Checks if the current player wins the game.
+        This method performs the checks on the whole board in all possible
+        direction until 4 consecutive chips are found
         for the current player.
         """
-
-        # Check each columns from left to right
-        for x in range(0, settings.COLS):
-            consecutive_chips = 0
-            previous_chip = None
-
-            for y in range(0, settings.ROWS):
-                cell = self.board[x][y]
-
-                if cell == self.current_player.name and consecutive_chips == 0:
-                    self.current_consecutive_chips.append((x, y))
-                    consecutive_chips = 1
-                elif cell == self.current_player.name and cell == previous_chip:
-                    self.current_consecutive_chips.append((x, y))
-                    consecutive_chips += 1
-                elif cell != self.current_player.name:
-                    consecutive_chips = 0
-
-                if consecutive_chips == 4:
-                    return True
-
-                previous_chip = cell
-
-        self.current_consecutive_chips.clear()
-
-        # Check each rows from top to bottom
-        for y in range(0, settings.ROWS):
-            consecutive_chips = 0
-            previous_chip = None
-
-            for x in range(0, settings.COLS):
-                cell = self.board[x][y]
-
-                if cell == self.current_player.name and consecutive_chips == 0:
-                    self.current_consecutive_chips.append((x, y))
-                    consecutive_chips = 1
-                elif cell == self.current_player.name and cell == previous_chip:
-                    self.current_consecutive_chips.append((x, y))
-                    consecutive_chips += 1
-                elif cell != self.current_player.name:
-                    consecutive_chips = 0
-
-                if consecutive_chips == 4:
-                    return True
-
-                previous_chip = cell
-
-        self.current_consecutive_chips.clear()
-
-        # Check each "/" diagonal starting at the top left corner
-        x = 0
-
-        for y in range(0, settings.ROWS):
-            consecutive_chips = self.count_consecutive_diagonal_chips(0, None, x, y, (1, -1))
-
-            if consecutive_chips == 4:
-                return True
-
-        self.current_consecutive_chips.clear()
-
-        # Check each "/" diagonal starting at the bottom left + 1 corner
-        y = settings.ROWS - 1
-
-        for x in range(1, settings.COLS):
-            consecutive_chips = self.count_consecutive_diagonal_chips(0, None, x, y, (1, -1))
-
-            if consecutive_chips == 4:
-                return True
-
-        self.current_consecutive_chips.clear()
-
-        # Check each "\" diagonal starting at the bottom left corner
-        x = 0
-
-        for y in range(settings.ROWS, -1, -1):
-            consecutive_chips = self.count_consecutive_diagonal_chips(0, None, x, y, (1, 1))
-
-            if consecutive_chips == 4:
-                return True
-
-        self.current_consecutive_chips.clear()
-
-        # Check each "\" diagonal starting at the top left + 1 corner
-        y = 0
-
-        for x in range(1, settings.COLS):
-            consecutive_chips = self.count_consecutive_diagonal_chips(0, None, x, y, (1, 1))
-
-            if consecutive_chips == 4:
-                return True
-
-        self.current_consecutive_chips.clear()
-
-        return False
+        return self.check_horizontal_win() or self.check_vertical_win() or \
+            self.check_diagonal_left_to_right() or self.check_diagonal_right_to_left()
 
     def did_no_one_win(self):
         """Check if no one win the game.
@@ -233,7 +240,7 @@ class Game:
 
                 self.app.window.blit(image, (x * settings.IMAGES_SIDE_SIZE, y * settings.IMAGES_SIDE_SIZE + settings.BOARD_MARGIN_TOP))
 
-    def get_free_row(self, column):
+    def get_free_row(self, column) -> int:
         """Given a column, get the latest row number which is free."""
         for y, cell in self.board[column].items():
             # If there's nothing in the current cell
@@ -242,7 +249,7 @@ class Game:
                 if (y == settings.ROWS - 1) or (not y + 1 > settings.ROWS - 1 and self.board[column][y + 1]):
                     return y
 
-        return False
+        return 0
 
     def draw_background(self):
         self.app.window.fill(settings.COLORS.BLACK.value)
@@ -263,7 +270,7 @@ class Game:
         self.app.window.blit(status, status_rect)
 
         # Game name
-        game_name = self.normal_font.render('Connect Four v' + settings.VERSION, True, settings.COLORS.WHITE.value)
+        game_name = self.normal_font.render(settings.GAME_NAME + settings.VERSION, True, settings.COLORS.WHITE.value)
         game_name_rect = game_name.get_rect()
         game_name_rect.centery = 25
         game_name_rect.right = self.app.window.get_rect().width - 10
@@ -339,14 +346,16 @@ class Game:
                         # Check all rows in the currently selected column starting from the top
                         chip_row_stop = self.get_free_row(self.current_player_chip_column)
 
-                        if chip_row_stop is not False: # Actually move the chip in the current column and reset the current one (to create a new one later)
+                        if chip_row_stop: # Actually move the chip in the current column and reset the current one (to create a new one later)
                             if self.placed_sound:
                                 self.placed_sound.play()
-
+                            self.last_chip_pos = (self.current_player_chip_column, chip_row_stop)
                             self.board[self.current_player_chip_column][chip_row_stop] = self.current_player.name
                             self.current_player_chip.rect.top += settings.IMAGES_SIDE_SIZE * (chip_row_stop + 1)
-
-                            if self.did_i_win():
+                            t1 = time.time()
+                            won = self.has_current_player_won()
+                            print(time.time() - t1)
+                            if won:
                                 self.set_highlighted_chips()
                                 pygame.mixer.music.stop()
 
@@ -380,7 +389,7 @@ class Game:
 
                             logging.info('{} column full'.format(self.current_player_chip_column))
 
-            status_text = self.current_player.name + ' player turn'
+            status_text = self.current_player.name + ' player\'s turn'
             status_color = self.current_player.color
         elif self.state == settings.GAME_STATES.WON:
             for event in pygame.event.get():
@@ -401,7 +410,7 @@ class Game:
 
                     pygame.time.set_timer(settings.EVENTS.WINNER_CHIPS_EVENT.value, 600)
 
-            status_text = self.current_player.name + ' player win!'
+            status_text = self.current_player.name + ' player wins!'
             status_color = self.current_player.color
         elif self.state == settings.GAME_STATES.NO_ONE_WIN:
             for event in pygame.event.get():
@@ -415,7 +424,7 @@ class Game:
                     elif event.key == pygame.K_RETURN: # Pressing the Return key will start a new game
                         self.init_new_game()
 
-            status_text = 'Shame, no one win.'
+            status_text = 'DRAW'
             status_color = settings.COLORS.WHITE.value
 
         self.draw_header(status_text, status_color)
