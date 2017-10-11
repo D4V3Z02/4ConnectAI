@@ -1,6 +1,11 @@
-﻿This is a continuation of an existing python-implementation of 4connect https://github.com/EpocDotFr/connectfour/issues .
+﻿This is a continuation of an existing python-implementation of 4connect https://github.com/EpocDotFr/connectfour/issues
 
-It contains currently a faster checking of the win condition after a player finished a turn and is going to get it's own AI.
+##Improvements:
+- Added faster win-condition checking (does not check the whole board after one chip has been played)
+
+##TODO:
+
+- This game is going to get an AI-opponent
 
 # Connect Four
 
@@ -13,7 +18,6 @@ The [Connect Four](https://en.wikipedia.org/wiki/Connect_Four) game, implemented
 ## Features
 
   - All the Connect Four rules
-  - State of the art graphics
   - Chips that made the player win are highlighted
   - Sound effects!
   - Musics!
