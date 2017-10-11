@@ -2,10 +2,10 @@
 
 This is a continuation of an existing python-implementation of 4connect https://github.com/EpocDotFr/connectfour/issues
 
-##Improvements:
+## Improvements:
 - Added faster win-condition checking (does not check the whole board after one chip has been played)
 
-##TODO:
+## TODO:
 
 - This game is going to get an AI-opponent
 
