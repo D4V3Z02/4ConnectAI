@@ -352,10 +352,7 @@ class Game:
                             self.last_chip_pos = (self.current_player_chip_column, chip_row_stop)
                             self.board[self.current_player_chip_column][chip_row_stop] = self.current_player.name
                             self.current_player_chip.rect.top += settings.IMAGES_SIDE_SIZE * (chip_row_stop + 1)
-                            t1 = time.time()
-                            won = self.has_current_player_won()
-                            print(time.time() - t1)
-                            if won:
+                            if self.has_current_player_won():
                                 self.set_highlighted_chips()
                                 pygame.mixer.music.stop()
 
