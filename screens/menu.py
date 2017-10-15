@@ -76,10 +76,10 @@ class Menu:
         # Offline game button
         self.gui_container.add(self.create_menu_button(
             y=150,
-            text='Offline game',
+            text='Two Player Mode',
             on_click=self.btn_offline_game_click
         ))
-
+        """
         # Host an online game button
 
         self.gui_container.add(self.create_menu_button(
@@ -112,10 +112,10 @@ class Menu:
             on_click=self.btn_join_lan_game_click,
             disabled=not self.app.dev_mode
         ))
-
-        # Quit button
+        """
+        # Quit button #y=430
         self.gui_container.add(self.create_menu_button(
-            y=430,
+            y=210,
             text='Quit',
             on_click=self.btn_quit_click
         ))
