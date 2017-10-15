@@ -81,6 +81,7 @@ class Menu:
         ))
 
         # Host an online game button
+
         self.gui_container.add(self.create_menu_button(
             y=210,
             text='Host an online game',
@@ -134,6 +135,7 @@ class Menu:
         self.app.window.blit(version, version_rect)
 
     def draw_footer(self):
+        """
         footer1 = self.small_font.render('Connect Four™ is a trademark of Milton Bradley / Hasbro', True, settings.COLORS.BLACK.value)
         footer1_rect = footer1.get_rect()
         footer1_rect.centerx = self.app.window.get_rect().centerx
@@ -147,6 +149,7 @@ class Menu:
         footer2_rect.bottom = self.app.window.get_rect().h - 5
 
         self.app.window.blit(footer2, footer2_rect)
+        """
 
     def update(self):
         for event in pygame.event.get():
