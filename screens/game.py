@@ -280,7 +280,6 @@ class Game:
 
     def place_chip(self) -> None:
         chip_row_stop = self.get_free_row(self.current_player_chip_column)
-        print(chip_row_stop)
         if chip_row_stop >= 0:  # Actually move the chip in the current column and reset the current one (to create a new one later)
             if self.placed_sound:
                 self.placed_sound.play()
