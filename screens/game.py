@@ -80,24 +80,6 @@ class Game:
         y = y + abs(direction[1]) if direction[1] > 0 else y - abs(direction[1])
         return x, y
 
-    def count_consecutive_diagonal_chips(self, consecutive_chips, previous_chip, x, y, direction):
-        if not self.is_valid_position(x, y):
-            return consecutive_chips
-        cell = self.board[x][y]
-        if cell == self.current_player.name and consecutive_chips == 0:
-            self.current_consecutive_chips.append((x, y))
-            consecutive_chips = 1
-        elif cell == self.current_player.name and cell == previous_chip:
-            self.current_consecutive_chips.append((x, y))
-            consecutive_chips += 1
-        elif cell != self.current_player.name:
-            consecutive_chips = 0
-        if consecutive_chips == 4:
-            return consecutive_chips
-        x, y = self.compute_direction_pos(x, y, direction)
-        previous_chip = cell
-        return self.count_consecutive_diagonal_chips(consecutive_chips, previous_chip, x, y, direction)
-
     def set_highlighted_chips(self):
         for chips_position in list(self.current_consecutive_chips):
             self.highlighted_chips[chips_position[0]][chips_position[1]] = True
