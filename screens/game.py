@@ -75,11 +75,6 @@ class Game:
             return False
         return True
 
-    def compute_direction_pos(self, x, y, direction):
-        x = x + abs(direction[0]) if direction[0] > 0 else x - abs(direction[0])
-        y = y + abs(direction[1]) if direction[1] > 0 else y - abs(direction[1])
-        return x, y
-
     def set_highlighted_chips(self):
         for chips_position in list(self.current_consecutive_chips):
             self.highlighted_chips[chips_position[0]][chips_position[1]] = True
