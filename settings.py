@@ -60,6 +60,7 @@ class GAME_STATES(Enum):
     PLAYING = 2
     WON = 4
     NO_ONE_WIN = 6
+    AI = 8
 
 
 class EVENTS(Enum):

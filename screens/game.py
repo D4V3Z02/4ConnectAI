@@ -326,10 +326,7 @@ class Game:
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN:
-                try:
-                    self.execute_operation_while_playing(event.key)
-                except KeyError:
-                    pass
+                self.execute_operation_while_playing(event.key)
         self.status_text = self.current_player.name + ' player\'s turn'
         self.status_color = self.current_player.color
 
