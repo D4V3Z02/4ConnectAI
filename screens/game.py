@@ -206,8 +206,10 @@ class Game:
 
                 self.app.window.blit(image, (x * settings.IMAGES_SIDE_SIZE, y * settings.IMAGES_SIDE_SIZE + settings.BOARD_MARGIN_TOP))
 
-    def get_free_row(self, column) -> int:
+    def get_free_row(self, column: int, board=None) -> int:
         """Given a column, get the latest row number which is free."""
+        if board is None:
+            board = self.board
         for y, cell in self.board[column].items():
             # If there's nothing in the current cell
             if not cell:
@@ -216,14 +218,14 @@ class Game:
                     return y
         return -1
 
-    def draw_background(self):
+    def draw_background(self) -> None:
         self.app.window.fill(settings.COLORS.BLACK.value)
         blue_rect_1 = pygame.Rect((0, 0), (settings.WINDOW_SIZE[0], settings.COLUMN_CHOOSING_MARGIN_TOP - 1))
         blue_rect_2 = pygame.Rect((0, settings.COLUMN_CHOOSING_MARGIN_TOP), (settings.WINDOW_SIZE[0], settings.IMAGES_SIDE_SIZE))
         self.app.window.fill(settings.COLORS.BLUE.value, blue_rect_1)
         self.app.window.fill(settings.COLORS.BLUE.value, blue_rect_2)
 
-    def draw_header(self, status_text, status_color):
+    def draw_header(self, status_text, status_color) -> None:
         # Status
         status = self.title_font.render(status_text, True, status_color)
         status_rect = status.get_rect()
@@ -255,13 +257,15 @@ class Game:
         self.app.window.blit(scores_red, scores_red_rect)
         pygame.draw.line(self.app.window, settings.COLORS.BLACK.value, (scores_red_rect.left - 15, 0), (scores_red_rect.left - 15, settings.COLUMN_CHOOSING_MARGIN_TOP - 1))
 
-    def place_chip(self) -> None:
+    def place_chip(self, board=None) -> None:
+        if board is None:
+            board = self.board
         chip_row_stop = self.get_free_row(self.current_player_chip_column)
         if chip_row_stop >= 0:  # Actually move the chip in the current column and reset the current one (to create a new one later)
             if self.placed_sound:
                 self.placed_sound.play()
             self.last_chip_pos = (self.current_player_chip_column, chip_row_stop)
-            self.board[self.current_player_chip_column][chip_row_stop] = self.current_player.name
+            board[self.current_player_chip_column][chip_row_stop] = self.current_player.name
             self.current_player_chip.rect.top += settings.IMAGES_SIDE_SIZE * (chip_row_stop + 1)
             if self.has_current_player_won():
                 self.set_highlighted_chips()
