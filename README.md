@@ -4,6 +4,7 @@ This is a fork of an existing python-implementation of Connect Four from https:/
 
 ## Improvements:
 - Added faster win-condition checking (does not check the whole board after one chip has been played)
+- Added an AI which plays random turns
 
 ## TODO:
 
