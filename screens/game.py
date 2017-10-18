@@ -14,6 +14,8 @@ class Game:
         self.app = app
         self.last_chip_pos = None
         self.current_player_chip = None
+        self.current_player = None
+        self.current_opponent = None
         self.status_text = ""
         self.status_color = settings.COLORS.WHITE.value
         self.button_mapping_while_playing = {pygame.K_LEFT: self.move_chip_left,
@@ -44,19 +46,13 @@ class Game:
         self.normal_font = utils.load_font('monofur.ttf', 16)
         self.init_new_game()
 
-    def execute_update_dependant_on_state(self):
-        self.state_mapping[self.state]()
-
-    def execute_operation_while_playing(self, pygame_button):
-        if self.current_player_chip and pygame_button in self.button_mapping_while_playing:
-            self.button_mapping_while_playing[pygame_button]()
-
     def init_new_game(self):
         logging.info('Starting new game')
         self.state = settings.GAME_STATES.PLAYING
         self.chips.empty()
         self.current_consecutive_chips.clear()
         self.current_player = self.red_player # The starting player is always the red one
+        self.current_opponent = self.yellow_player
         self.current_player_chip = None
         self.current_player_chip_column = 0
         self.board = {}
@@ -69,6 +65,13 @@ class Game:
                 self.highlighted_chips[x][y] = None
         logging.info('Loading random music')
         utils.load_random_music(['techno_dreaming.wav', 'techno_celebration.wav', 'electric_rain.wav', 'snake_trance.wav'], volume=self.musics_volume)
+
+    def execute_update_dependant_on_state(self):
+        self.state_mapping[self.state]()
+
+    def execute_operation_while_playing(self, pygame_button):
+        if self.current_player_chip and pygame_button in self.button_mapping_while_playing:
+            self.button_mapping_while_playing[pygame_button]()
 
     def is_valid_position(self, x, y) -> bool:
         if x < 0 or x > settings.COLS - 1 or y < 0 or y > settings.ROWS - 1:
@@ -257,15 +260,13 @@ class Game:
         self.app.window.blit(scores_red, scores_red_rect)
         pygame.draw.line(self.app.window, settings.COLORS.BLACK.value, (scores_red_rect.left - 15, 0), (scores_red_rect.left - 15, settings.COLUMN_CHOOSING_MARGIN_TOP - 1))
 
-    def place_chip(self, board=None) -> None:
-        if board is None:
-            board = self.board
+    def place_chip(self) -> None:
         chip_row_stop = self.get_free_row(self.current_player_chip_column)
         if chip_row_stop >= 0:  # Actually move the chip in the current column and reset the current one (to create a new one later)
             if self.placed_sound:
                 self.placed_sound.play()
             self.last_chip_pos = (self.current_player_chip_column, chip_row_stop)
-            board[self.current_player_chip_column][chip_row_stop] = self.current_player.name
+            self.board[self.current_player_chip_column][chip_row_stop] = self.current_player.name
             self.current_player_chip.rect.top += settings.IMAGES_SIDE_SIZE * (chip_row_stop + 1)
             if self.has_current_player_won():
                 self.set_highlighted_chips()
@@ -285,9 +286,12 @@ class Game:
                 self.state = settings.GAME_STATES.NO_ONE_WIN
                 logging.info('No one won')
             else:  # It's the other player's turn if the current player didn't win
-                self.current_player = self.yellow_player \
-                if isinstance(self.current_player, objects.RedPlayer) else self.red_player
-                logging.info(self.current_player.name + ' player turn')
+                if self.current_player == self.yellow_player:
+                    self.current_player = self.red_player
+                    self.current_opponent = self.yellow_player
+                else:
+                    self.current_player = self.yellow_player
+                    self.current_opponent = self.red_player
             self.current_player_chip = None
             self.current_player_chip_column = 0
         else:  # The column is full

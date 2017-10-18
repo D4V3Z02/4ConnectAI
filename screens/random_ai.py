@@ -13,7 +13,7 @@ import copy
 import random
 
 
-class GameAgainstAI(Game):
+class RandomAI(Game):
     def __init__(self, app):
         Game.__init__(self, app)
 
@@ -39,7 +39,7 @@ class GameAgainstAI(Game):
     def update_ai_player(self) -> None:
         best_move, highest_move_score = self.evaluate_next_turn(self.board, 5, self.current_player, self.current_opponent)
         self.place_chip_ai(best_move)
-        print(best_move, highest_move_score)
+        print('AI move:', best_move, highest_move_score)
 
     def evaluate_next_turn(self, board: dict, depth: int, current_player: Player, current_opponent: Player) -> int:
         """
