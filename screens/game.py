@@ -70,8 +70,11 @@ class Game:
         self.state_mapping[self.state]()
 
     def execute_operation_while_playing(self, pygame_button):
-        if self.current_player_chip and pygame_button in self.button_mapping_while_playing:
-            self.button_mapping_while_playing[pygame_button]()
+        if self.current_player_chip:
+            try:
+                self.button_mapping_while_playing[pygame_button]()
+            except KeyError:
+                return
 
     def is_valid_position(self, x, y) -> bool:
         if x < 0 or x > settings.COLS - 1 or y < 0 or y > settings.ROWS - 1:
@@ -213,11 +216,11 @@ class Game:
         """Given a column, get the latest row number which is free."""
         if board is None:
             board = self.board
-        for y, cell in self.board[column].items():
+        for y, cell in board[column].items():
             # If there's nothing in the current cell
             if not cell:
                 # If we're in the latest cell or if the next cell isn't empty
-                if (y == settings.ROWS - 1) or (not y + 1 > settings.ROWS - 1 and self.board[column][y + 1]):
+                if (y == settings.ROWS - 1) or (not y + 1 > settings.ROWS - 1 and board[column][y + 1]):
                     return y
         return -1
 
