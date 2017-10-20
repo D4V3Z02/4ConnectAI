@@ -2,6 +2,7 @@ from screens import game
 from screens import lobby
 from screens import game_against_ai
 from screens import random_ai
+from screens import minmax_ai
 import pygame
 import logging
 import settings
@@ -55,13 +56,17 @@ class Menu:
         logging.info('Join a LAN game button clicked')
         self.app.set_current_screen(lobby.Lobby, settings.LOBBY_STATES.JOIN_LAN_GAME)
 
-    def start_minmax_ai_game(self, widget):
-        logging.info('Starting AI game')
-        self.app.set_current_screen(game_against_ai.GameAgainstAI)
-
     def start_random_ai_game(self, widget):
         logging.info('Starting AI game')
         self.app.set_current_screen(random_ai.RandomAI)
+
+    def start_minmax_ai_game(self, widget):
+        logging.info('Starting AI game')
+        self.app.set_current_screen(minmax_ai.GameAgainstAI)
+
+    def start_negamax_ai_game(self, widget):
+        logging.info('Starting AI game')
+        self.app.set_current_screen(game_against_ai.GameAgainstAI)
 
     def btn_quit_click(self, widget):
         pygame.quit()
@@ -78,57 +83,30 @@ class Menu:
             text='Two Player Mode',
             on_click=self.btn_offline_game_click
         ))
-        """
-        # Host an online game button
 
-        self.gui_container.add(self.create_menu_button(
-            y=210,
-            text='Host an online game',
-            on_click=self.btn_host_online_game_click,
-            disabled=not self.app.dev_mode
-        ))
-
-        # Join an online game button
-        self.gui_container.add(self.create_menu_button(
-            y=260,
-            text='Join an online game',
-            on_click=self.btn_join_online_game_click,
-            disabled=not self.app.dev_mode
-        ))
-
-        # Host a LAN game button
-        self.gui_container.add(self.create_menu_button(
-            y=320,
-            text='Host a LAN game',
-            on_click=self.btn_host_lan_game_click,
-            disabled=not self.app.dev_mode
-        ))
-
-        # Join a LAN game button
-        self.gui_container.add(self.create_menu_button(
-            y=370,
-            text='Join a LAN game',
-            on_click=self.btn_join_lan_game_click,
-            disabled=not self.app.dev_mode
-        ))
-        """
         # Quit button #y=430
         self.gui_container.add(self.create_menu_button(
-            y=370,
+            y=440,
             text='Quit',
             on_click=self.btn_quit_click
         ))
 
         self.gui_container.add(self.create_menu_button(
-            y=280,
+            y=210,
             text='Play vs an AI (Random AI moves)',
             on_click=self.start_random_ai_game
         ))
 
         self.gui_container.add(self.create_menu_button(
-            y=210,
+            y=280,
             text='Play vs an AI (MinMax Algorithm)',
             on_click=self.start_minmax_ai_game
+        ))
+
+        self.gui_container.add(self.create_menu_button(
+            y=350,
+            text='Play vs an AI (Negamax Algorithm)',
+            on_click=self.start_negamax_ai_game
         ))
 
     def draw_title(self):
