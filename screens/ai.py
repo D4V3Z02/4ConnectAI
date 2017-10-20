@@ -9,7 +9,6 @@ class AIGame(game.Game):
     def __init__(self, app):
         if (app is None):
             return
-        print('Starting minmax game')
         game.Game.__init__(self, app)
 
     def update_while_playing(self) -> None:

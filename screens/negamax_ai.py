@@ -22,6 +22,7 @@ class GameNegamaxAI(ai.AIGame):
     def __init__(self, app):
         if (app is None):
             return
+        print('Starting negamax game')
         Game.__init__(self, app)
 
     def update_ai_player(self) -> None:
