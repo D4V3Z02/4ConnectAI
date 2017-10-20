@@ -1,6 +1,6 @@
 from screens import game
 from screens import lobby
-from screens import game_against_ai
+from screens import negamax_ai
 from screens import random_ai
 from screens import minmax_ai
 import pygame
@@ -11,8 +11,8 @@ import utils
 import sys
 
 
-
 class Menu:
+
     def __init__(self, app, force_music=False):
         logging.info('Initializing menu')
         self.app = app
@@ -62,11 +62,11 @@ class Menu:
 
     def start_minmax_ai_game(self, widget):
         logging.info('Starting AI game')
-        self.app.set_current_screen(minmax_ai.GameAgainstAI)
+        self.app.set_current_screen(minmax_ai.GameMinmaxAI)
 
     def start_negamax_ai_game(self, widget):
         logging.info('Starting AI game')
-        self.app.set_current_screen(game_against_ai.GameAgainstAI)
+        self.app.set_current_screen(negamax_ai.GameNegamaxAI)
 
     def btn_quit_click(self, widget):
         pygame.quit()
