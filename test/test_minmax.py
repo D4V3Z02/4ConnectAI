@@ -1,6 +1,7 @@
 import os, sys
 import objects
 from screens.minmax_ai import GameMinmaxAI
+import settings
 import unittest
 
 
@@ -40,8 +41,8 @@ class TestStringMethods(unittest.TestCase):
 
         ai_game.current_player = yellow
         ai_game.current_opponent = red
-        self.assertEqual(ai_game.evaluate_columns(board=board, current_player=yellow), 10)
-        self.assertEqual(ai_game.evaluate_rows(board=board, current_player=yellow), 10)
+        self.assertEqual(ai_game.evaluate_columns(board=board, current_player=yellow), settings.CHIP_COUNT_1_MULTIPLIER)
+        self.assertEqual(ai_game.evaluate_rows(board=board, current_player=yellow), settings.CHIP_COUNT_1_MULTIPLIER)
         # combination in column should return 100, two times one chip in a row therefore 20
         board = [[None, None, None, None, yellow_name, yellow_name],
                  [None, None, None, None, None, None],
@@ -50,8 +51,8 @@ class TestStringMethods(unittest.TestCase):
                  [None, None, None, None, None, None],
                  [None, None, None, None, None, None],
                  [None, None, None, None, None, None]]
-        self.assertEqual(ai_game.evaluate_columns(board=board, current_player=yellow), 100)
-        self.assertEqual(ai_game.evaluate_rows(board=board, current_player=yellow), 20)
+        self.assertEqual(ai_game.evaluate_columns(board=board, current_player=yellow), settings.CHIP_COUNT_2_MULTIPLIER)
+        self.assertEqual(ai_game.evaluate_rows(board=board, current_player=yellow), settings.CHIP_COUNT_1_MULTIPLIER*2)
         board = [[None, None, None, yellow_name, red_name, yellow_name],
                  [None, None, None, None, None, None],
                  [None, None, None, None, None, None],
@@ -60,8 +61,8 @@ class TestStringMethods(unittest.TestCase):
                  [None, None, None, None, None, None],
                  [None, None, None, None, None, None]]
         # two times one chip in a column -> 20, two times one chip in a row therefore 20
-        self.assertEqual(ai_game.evaluate_columns(board=board, current_player=yellow), 20)
-        self.assertEqual(ai_game.evaluate_rows(board=board, current_player=yellow), 20)
+        self.assertEqual(ai_game.evaluate_columns(board=board, current_player=yellow), settings.CHIP_COUNT_1_MULTIPLIER*2)
+        self.assertEqual(ai_game.evaluate_rows(board=board, current_player=yellow), settings.CHIP_COUNT_1_MULTIPLIER*2)
         board = [[None, None, None, None, yellow_name, yellow_name],
                  [None, None, None, None, None, None],
                  [None, None, None, None, None, None],
@@ -72,6 +73,27 @@ class TestStringMethods(unittest.TestCase):
         # chips in the middle (index 2 - 4) give quadruple score
         self.assertEqual(ai_game.evaluate_columns(board=board, current_player=yellow), 500)
         self.assertEqual(ai_game.evaluate_rows(board=board, current_player=yellow), 100)
+
+        board = [[None, None, yellow_name, None, None, None],
+                 [None, None, None, yellow_name, None, None],
+                 [None, None, None, None, yellow_name, None],
+                 [None, None, None, None, None, yellow_name],
+                 [None, None, None, None, None, None],
+                 [None, None, None, None, None, None],
+                 [None, None, None, None, None, None]]
+        # chips in the middle (index 2 - 4) give quadruple score
+        self.assertTrue(ai_game.evaluate_board(board=board, current_player=yellow) >= settings.CHIP_COUNT_4_MULTIPLIER)
+
+        board = [[None, None, None, None, yellow_name, None],
+                 [None, None, None, yellow_name, None, None],
+                 [None, None, yellow_name, None, None, None],
+                 [None, yellow_name, None, None, None, None],
+                 [None, None, None, None, None, None],
+                 [None, None, None, None, None, None],
+                 [None, None, None, None, None, None]]
+        # chips in the middle (index 2 - 4) give quadruple score
+        self.assertTrue(ai_game.evaluate_board(board=board,
+                                               current_player=yellow) >= settings.CHIP_COUNT_4_MULTIPLIER)
 
     def test_end_conidition(self):
         ai_game = GameMinmaxAI(None)

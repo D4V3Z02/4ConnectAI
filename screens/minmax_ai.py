@@ -2,7 +2,6 @@ from screens import menu
 from collections import deque
 import objects
 from objects import Player
-import pygame
 import settings
 import utils
 import logging
@@ -11,7 +10,6 @@ import objects
 from screens.game import Game
 import copy
 import random
-import time
 from screens import ai
 
 
@@ -41,7 +39,10 @@ class GameMinmaxAI(ai.AIGame):
                 child_board = copy.copy(copied_board)
                 # make a move in the copied board
                 child_board[column][chip_row_stop] = ai_player.name
-                possible_moves[column] = self.min(depth - 1, child_board, ai_player)
+                move_score = self.min(depth - 1, child_board, ai_player)
+                if column >= 2 and column <= 4:
+                    move_score = move_score*settings.MIDDLE_MULTIPLIER
+                possible_moves[column] = move_score
         highest_move_score = -INF
         best_move = None
         moves = list(possible_moves.items())
@@ -84,6 +85,7 @@ class GameMinmaxAI(ai.AIGame):
         # end recursion if depth is reached or no moves possible
         if depth == 0 or len(possible_moves) == 0 or self.did_someone_win(board, ai_player):
             return self.evaluate_board(board, ai_player)
+        move_score = INF
         for possible_move in possible_moves:
             max_ret = self.max(depth - 1, possible_move, ai_player)
             move_score = min(move_score, max_ret)
@@ -105,17 +107,14 @@ class GameMinmaxAI(ai.AIGame):
 
     def get_move_score(self, chip_count: int, column: int) -> int:
         move_score = 0
-        multiplier = 1
-        if column >= 2 and column <= 4:
-            multiplier = settings.MIDDLE_MULTIPLIER
         if chip_count == 1:
-            move_score = settings.CHIP_COUNT_1_MULTIPLIER * multiplier
+            move_score = settings.CHIP_COUNT_1_MULTIPLIER
         elif chip_count == 2:
-            move_score = settings.CHIP_COUNT_2_MULTIPLIER * multiplier
+            move_score = settings.CHIP_COUNT_2_MULTIPLIER
         elif chip_count == 3:
-            move_score = settings.CHIP_COUNT_3_MULTIPLIER * multiplier
+            move_score = settings.CHIP_COUNT_3_MULTIPLIER
         elif chip_count >= 4:
-            move_score = settings.CHIP_COUNT_4_MULTIPLIER * multiplier
+            move_score = settings.CHIP_COUNT_4_MULTIPLIER
         return move_score
 
     def evaluate_columns(self, board: dict, current_player: Player) -> int:
@@ -183,7 +182,7 @@ class GameMinmaxAI(ai.AIGame):
         enemy_streak = self.get_enemy_streak(board, current_player)
         if 4 in enemy_streak:
             move_score -= settings.CHIP_COUNT_4_MULTIPLIER
-            print('enemy won')
+            #print('enemy won')
         return move_score
 
     def get_enemy_streak(self, board: list, current_player: Player) -> list:
