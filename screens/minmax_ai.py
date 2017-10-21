@@ -15,9 +15,6 @@ import time
 from screens import ai
 
 
-DEPTH = 5
-
-
 class GameMinmaxAI(ai.AIGame):
     def __init__(self, app):
         if (app is None):
@@ -27,7 +24,7 @@ class GameMinmaxAI(ai.AIGame):
 
     def update_ai_player(self) -> None:
         t1 = time.time()
-        best_move, highest_move_score = self.evaluate_next_turn(self.board, DEPTH, self.current_player)
+        best_move, highest_move_score = self.evaluate_next_turn(self.board, settings.DEPTH, self.current_player)
         self.place_chip_ai(best_move)
         print('ai turn took',  time.time() - t1)
         print('Move Chosen:', best_move, 'Move Score', highest_move_score)
@@ -61,30 +58,38 @@ class GameMinmaxAI(ai.AIGame):
         return best_move, highest_move_score
 
     def copy_board(self, board: list) -> list:
+        """
         copied_board = []
-        for key in range(len(board)):
-            copied_board.append(board[key][:])
+        for x in range(len(board)):
+            copied_board.append(board[x][:])
         return copied_board
+        """
+        return [x[:] for x in board]
 
     def max(self, depth: int, board: list, ai_player: Player)-> int:
         # make all possible moves for the current player
         possible_moves = []
         for column in range(len(board)):
-            child_board = self.copy_board(board)
-            chip_row_stop = self.get_free_row(column, board=child_board)
+            chip_row_stop = self.get_free_row(column, board=board)
             if chip_row_stop >= 0:
+                child_board = self.copy_board(board)
                 child_board[column][chip_row_stop] = ai_player.name
                 possible_moves.append(child_board)
         # end recursion if depth is reached or no moves possible
         if depth == 0 or len(possible_moves) == 0:
+            """
             own, other = self.evaluate_board(board, ai_player), self.evaluate_board(board,
                                                                                     self.get_other_player(
                                                                                      ai_player))
             print('max', own, other)
             return own - other
-        move_score = -99999999
+            """
+            return self.evaluate_board(board, ai_player)
+        move_score = -999999999
         for child in possible_moves:
-            move_score = max(move_score, self.min(depth - 1, child, ai_player))
+            min_ret = self.min(depth - 1, child, ai_player)
+            print('min', min_ret)
+            move_score = max(move_score, min_ret)
         return move_score
 
     def min(self, depth: int, board: list, ai_player: Player) -> int:
@@ -98,12 +103,17 @@ class GameMinmaxAI(ai.AIGame):
                 possible_moves.append(child_board)
         # end recursion if depth is reached or no moves possible
         if depth == 0 or len(possible_moves) == 0:
+            """
             own, other = self.evaluate_board(board, ai_player), self.evaluate_board(board, self.get_other_player(ai_player))
             print('min',own, other)
             return own - other
-        move_score = 99999999
+            """
+            return self.evaluate_board(board, ai_player)
+        move_score = 999999999
         for child in possible_moves:
-            move_score = min(move_score, self.max(depth - 1, child, ai_player))
+            max_ret = self.max(depth - 1, child, ai_player)
+            print('max', max_ret)
+            move_score = min(move_score, max_ret)
         return move_score
 
     def get_other_player(self, player: Player) -> Player:
@@ -123,20 +133,19 @@ class GameMinmaxAI(ai.AIGame):
     def get_move_score(self, chip_count: int, column: int) -> int:
         move_score = 0
         multiplier = 1
-        if column > 2 and column < 5:
-            multiplier = 4
+        if column >= 2 and column <= 4:
+            multiplier = settings.MIDDLE_MULTIPLIER
         if chip_count == 1:
-            move_score = 1e2 * multiplier
+            move_score = settings.CHIP_COUNT_1_MULTIPLIER * multiplier
         elif chip_count == 2:
-            move_score = 1e3 * multiplier
+            move_score = settings.CHIP_COUNT_2_MULTIPLIER * multiplier
         elif chip_count == 3:
-            move_score = 1e4 * multiplier
+            move_score = settings.CHIP_COUNT_3_MULTIPLIER * multiplier
         elif chip_count >= 4:
-            move_score = 1e8 * multiplier
+            move_score = settings.CHIP_COUNT_4_MULTIPLIER * multiplier
         return move_score
 
-    def evaluate_board(self, board: dict, current_player: Player) -> int:
-        """Scores the passed board for the ai"""
+    def evaluate_columns(self, board: dict, current_player: Player) -> int:
         move_score = 0
         # Check each columns from left to right
         for x in range(settings.COLS):
@@ -146,12 +155,18 @@ class GameMinmaxAI(ai.AIGame):
                 cell = board[x][y]
                 if cell == current_player.name and consecutive_chips == 0:
                     consecutive_chips = 1
+                    print(consecutive_chips)
                 elif cell == current_player.name and cell == previous_chip:
                     consecutive_chips += 1
                 elif cell != current_player.name:
                     move_score += self.get_move_score(consecutive_chips, x)
                     consecutive_chips = 0
                 previous_chip = cell
+            move_score += self.get_move_score(consecutive_chips, x)
+        return move_score
+
+    def evaluate_rows(self, board: dict, current_player: Player) -> int:
+        move_score = 0
         # Check each rows from top to bottom
         for y in range(settings.ROWS):
             consecutive_chips = 0
@@ -164,8 +179,16 @@ class GameMinmaxAI(ai.AIGame):
                     consecutive_chips += 1
                 elif cell != current_player.name:
                     move_score += self.get_move_score(consecutive_chips, x)
+                    print(move_score)
                     consecutive_chips = 0
                 previous_chip = cell
+            move_score += self.get_move_score(consecutive_chips, x)
+        return move_score
+
+    def evaluate_board(self, board: dict, current_player: Player) -> int:
+        """Scores the passed board for the ai"""
+        move_score = self.evaluate_columns(board, current_player)
+        move_score += self.evaluate_rows(board, current_player)
         # Check each "/" diagonal starting at the top left corner
         x = 0
         for y in range(settings.ROWS):
@@ -284,6 +307,7 @@ if __name__ == "__main__":
              [None, None, None, None, None, 'Yellow'],
              [None, None, None, None, None, 'Yellow'],
              [None, 'Yellow', 'Red', 'Yellow', 'Red', 'Yellow']]
+    print([x[:] for x in board])
     ai_game = GameMinmaxAI(None)
     print(ai_game.get_free_row(6, board=board))
     print(ai_game.copy_board(board))

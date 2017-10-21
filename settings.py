@@ -39,6 +39,15 @@ YELLOW_CHIP_IMAGE = 'yellow_chip.png'
 
 GAME_NAME = 'AI Connect Four v'
 
+DEPTH = 5
+MIDDLE_MULTIPLIER = 4
+
+CHIP_COUNT_1_MULTIPLIER = 1e1
+CHIP_COUNT_2_MULTIPLIER = 1e2
+CHIP_COUNT_3_MULTIPLIER = 1e3
+CHIP_COUNT_4_MULTIPLIER = 1e5
+
+
 
 class GuiTheme(gui.DefaultTheme):
     def __init__(self, sounds_volume=0.5):
