@@ -42,10 +42,10 @@ class GameMinmaxAI(ai.AIGame):
         possible_moves = {}
         copied_board = self.copy_board(board)
         for column in range(len(board)):
-            child_board = copy.copy(copied_board)
-            chip_row_stop = self.get_free_row(column, board=child_board)
+            chip_row_stop = self.get_free_row(column, board=board)
             # check if there is a free row in the current column
             if chip_row_stop >= 0:
+                child_board = copy.copy(copied_board)
                 # make a move in the copied board
                 child_board[column][chip_row_stop] = ai_player.name
                 possible_moves[column] = self.min(depth - 1, child_board,
@@ -66,44 +66,44 @@ class GameMinmaxAI(ai.AIGame):
             copied_board.append(board[key][:])
         return copied_board
 
-    def max(self, depth: int, board: dict, player: Player):
+    def max(self, depth: int, board: list, ai_player: Player)-> int:
         # make all possible moves for the current player
         possible_moves = []
         for column in range(len(board)):
             child_board = self.copy_board(board)
             chip_row_stop = self.get_free_row(column, board=child_board)
             if chip_row_stop >= 0:
-                child_board[column][chip_row_stop] = player.name
+                child_board[column][chip_row_stop] = ai_player.name
                 possible_moves.append(child_board)
         # end recursion if depth is reached or no moves possible
         if depth == 0 or len(possible_moves) == 0:
-            own, other = self.evaluate_board(board, player), self.evaluate_board(board,
-                                                                                 self.get_other_player(
-                                                                                     player))
+            own, other = self.evaluate_board(board, ai_player), self.evaluate_board(board,
+                                                                                    self.get_other_player(
+                                                                                     ai_player))
             print('max', own, other)
             return own - other
         move_score = -99999999
         for child in possible_moves:
-            move_score = max(move_score, self.min(depth-1, child, player))
+            move_score = max(move_score, self.min(depth - 1, child, ai_player))
         return move_score
 
-    def min(self, depth: int, board: dict, player: Player):
+    def min(self, depth: int, board: list, ai_player: Player) -> int:
         possible_moves = []
         for column in range(len(board)):
-            child_board = self.copy_board(board)
-            print(child_board)
-            chip_row_stop = self.get_free_row(column, board=child_board)
+            chip_row_stop = self.get_free_row(column, board=board)
             if chip_row_stop >= 0:
-                child_board[column][chip_row_stop] = self.get_other_player(player).name
+                child_board = self.copy_board(board)
+                child_board[column][chip_row_stop] = self.get_other_player(ai_player).name
+                print(child_board)
                 possible_moves.append(child_board)
         # end recursion if depth is reached or no moves possible
         if depth == 0 or len(possible_moves) == 0:
-            own, other = self.evaluate_board(board, player), self.evaluate_board(board, self.get_other_player(player))
+            own, other = self.evaluate_board(board, ai_player), self.evaluate_board(board, self.get_other_player(ai_player))
             print('min',own, other)
             return own - other
         move_score = 99999999
         for child in possible_moves:
-            move_score = min(move_score, self.max(depth - 1, child, player))
+            move_score = min(move_score, self.max(depth - 1, child, ai_player))
         return move_score
 
     def get_other_player(self, player: Player) -> Player:
@@ -285,6 +285,7 @@ if __name__ == "__main__":
              [None, None, None, None, None, 'Yellow'],
              [None, 'Yellow', 'Red', 'Yellow', 'Red', 'Yellow']]
     ai_game = GameMinmaxAI(None)
+    print(ai_game.get_free_row(6, board=board))
     print(ai_game.copy_board(board))
     #red = objects.RedPlayer()
     #yellow = objects.YellowPlayer()
