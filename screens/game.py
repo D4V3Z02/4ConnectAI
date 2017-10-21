@@ -55,14 +55,14 @@ class Game:
         self.current_opponent = self.yellow_player
         self.current_player_chip = None
         self.current_player_chip_column = 0
-        self.board = {}
-        self.highlighted_chips = {}
+        self.board = []
+        self.highlighted_chips = []
         for x in range(0, settings.COLS):
-            self.board[x] = {}
-            self.highlighted_chips[x] = {}
+            self.board.append([])
+            self.highlighted_chips.append([])
             for y in range(0, settings.ROWS):
-                self.board[x][y] = None
-                self.highlighted_chips[x][y] = None
+                self.board[x].insert(y, None)
+                self.highlighted_chips[x].insert(y, None)
         logging.info('Loading random music')
         utils.load_random_music(['techno_dreaming.wav', 'techno_celebration.wav', 'electric_rain.wav', 'snake_trance.wav'], volume=self.musics_volume)
 
@@ -216,11 +216,12 @@ class Game:
         """Given a column, get the latest row number which is free."""
         if board is None:
             board = self.board
-        for y, cell in board[column].items():
+        column = board[column]
+        for y in range(len(column)):
             # If there's nothing in the current cell
-            if not cell:
+            if column[y] is None:
                 # If we're in the latest cell or if the next cell isn't empty
-                if (y == settings.ROWS - 1) or (not y + 1 > settings.ROWS - 1 and board[column][y + 1]):
+                if (y == settings.ROWS - 1) or (not y + 1 > settings.ROWS - 1 and column[y + 1]):
                     return y
         return -1
 

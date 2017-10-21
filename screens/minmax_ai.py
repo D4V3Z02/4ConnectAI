@@ -40,8 +40,8 @@ class GameMinmaxAI(ai.AIGame):
         """
         # iterate over possible placements
         possible_moves = {}
-        copied_board = copy.deepcopy(board)
-        for column, value in board.items():
+        copied_board = self.copy_board(board)
+        for column in range(len(board)):
             child_board = copy.copy(copied_board)
             chip_row_stop = self.get_free_row(column, board=child_board)
             # check if there is a free row in the current column
@@ -60,19 +60,16 @@ class GameMinmaxAI(ai.AIGame):
                 best_move = move
         return best_move, highest_move_score
 
-    def copy_board(self, board: dict) -> dict:
-        copied_board = {}
-        for key, column in board.items():
-            copied_column = {}
-            for key_column, row in column.items():
-                copied_column[key_column] = row
-            copied_board[key] = copied_column
+    def copy_board(self, board: list) -> list:
+        copied_board = []
+        for key in range(len(board)):
+            copied_board.append(board[key][:])
         return copied_board
 
     def max(self, depth: int, board: dict, player: Player):
         # make all possible moves for the current player
         possible_moves = []
-        for column, value in board.items():
+        for column in range(len(board)):
             child_board = self.copy_board(board)
             chip_row_stop = self.get_free_row(column, board=child_board)
             if chip_row_stop >= 0:
@@ -92,7 +89,7 @@ class GameMinmaxAI(ai.AIGame):
 
     def min(self, depth: int, board: dict, player: Player):
         possible_moves = []
-        for column, value in board.items():
+        for column in range(len(board)):
             child_board = self.copy_board(board)
             print(child_board)
             chip_row_stop = self.get_free_row(column, board=child_board)
@@ -280,14 +277,13 @@ class GameMinmaxAI(ai.AIGame):
         return x, y
 
 if __name__ == "__main__":
-    board = {
-        0: {0: None, 1: None, 2: None, 3: 'Red', 4: 'Red', 5: 'Red'},
-        1: {0: None, 1: None, 2: None, 3: None, 4: 'Red', 5: 'Yellow'},
-        2: {0: None, 1: None, 2: None, 3: None, 4: None, 5: 'Red'},
-        3: {0: None, 1: None, 2: None, 3: None, 4: None, 5: 'Red'},
-        4: {0: None, 1: None, 2: None, 3: None, 4: None, 5: 'Red'},
-        5: {0: None, 1: None, 2: None, 3: None, 4: 'Red', 5: 'Yellow'},
-        6: {0: None, 1: None, 2: None, 3: None, 4: 'Red', 5: 'Red'}}
+    board = [[None, None, None, None, 'Yellow', 'Red'],
+             [None, None, None, None, None, 'Yellow'],
+             [None, None, None, None, None, 'Yellow'],
+             [None, None, None, None, None, 'Yellow'],
+             [None, None, None, None, None, 'Yellow'],
+             [None, None, None, None, None, 'Yellow'],
+             [None, 'Yellow', 'Red', 'Yellow', 'Red', 'Yellow']]
     ai_game = GameMinmaxAI(None)
     print(ai_game.copy_board(board))
     #red = objects.RedPlayer()
