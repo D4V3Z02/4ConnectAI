@@ -2,6 +2,7 @@ from screens import game
 import settings
 import pygame
 import sys
+import time
 
 
 class AIGame(game.Game):
@@ -29,3 +30,10 @@ class AIGame(game.Game):
                 self.navigate_to_menu()
         self.status_text = self.current_player.name + ' player\'s turn'
         self.status_color = self.current_player.color
+
+    def update_ai_player(self) -> None:
+        t1 = time.time()
+        best_move, highest_move_score = self.min_max(self.board, settings.DEPTH, self.current_player)
+        self.place_chip_ai(best_move)
+        print('ai turn took',  time.time() - t1)
+        print('Move Chosen:', best_move, 'Move Score', highest_move_score)

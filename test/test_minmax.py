@@ -1,10 +1,11 @@
 import os, sys
+import objects
+from screens.minmax_ai import GameMinmaxAI
+import unittest
+
+
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(CURRENT_DIR))
-import unittest
-from screens.minmax_ai import GameMinmaxAI
-from objects import Player
-import objects
 
 
 class TestStringMethods(unittest.TestCase):
@@ -24,7 +25,11 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual(ai_game.get_free_row(4, board=board), -1)
 
     def test_evaluate_board(self):
-        board = [[None, None, None, None, None, 'Yellow'],
+        red = objects.RedPlayer()
+        yellow = objects.YellowPlayer()
+        yellow_name = yellow.name
+        red_name = red.name
+        board = [[None, None, None, None, None, yellow_name],
                  [None, None, None, None, None, None],
                  [None, None, None, None, None, None],
                  [None, None, None, None, None, None],
@@ -32,14 +37,13 @@ class TestStringMethods(unittest.TestCase):
                  [None, None, None, None, None, None],
                  [None, None, None, None, None, None]]
         ai_game = GameMinmaxAI(None)
-        red = objects.RedPlayer()
-        yellow = objects.YellowPlayer()
+
         ai_game.current_player = yellow
         ai_game.current_opponent = red
         self.assertEqual(ai_game.evaluate_columns(board=board, current_player=yellow), 10)
         self.assertEqual(ai_game.evaluate_rows(board=board, current_player=yellow), 10)
         # combination in column should return 100, two times one chip in a row therefore 20
-        board = [[None, None, None, None, 'Yellow', 'Yellow'],
+        board = [[None, None, None, None, yellow_name, yellow_name],
                  [None, None, None, None, None, None],
                  [None, None, None, None, None, None],
                  [None, None, None, None, None, None],
@@ -48,7 +52,7 @@ class TestStringMethods(unittest.TestCase):
                  [None, None, None, None, None, None]]
         self.assertEqual(ai_game.evaluate_columns(board=board, current_player=yellow), 100)
         self.assertEqual(ai_game.evaluate_rows(board=board, current_player=yellow), 20)
-        board = [[None, None, None, 'Yellow', 'Red', 'Yellow'],
+        board = [[None, None, None, yellow_name, red_name, yellow_name],
                  [None, None, None, None, None, None],
                  [None, None, None, None, None, None],
                  [None, None, None, None, None, None],
@@ -58,16 +62,63 @@ class TestStringMethods(unittest.TestCase):
         # two times one chip in a column -> 20, two times one chip in a row therefore 20
         self.assertEqual(ai_game.evaluate_columns(board=board, current_player=yellow), 20)
         self.assertEqual(ai_game.evaluate_rows(board=board, current_player=yellow), 20)
-        board = [[None, None, None, None, 'Yellow', 'Yellow'],
+        board = [[None, None, None, None, yellow_name, yellow_name],
                  [None, None, None, None, None, None],
                  [None, None, None, None, None, None],
-                 [None, None, None, None, 'Yellow', 'Yellow'],
+                 [None, None, None, None, yellow_name, yellow_name],
                  [None, None, None, None, None, None],
                  [None, None, None, None, None, None],
                  [None, None, None, None, None, None]]
         # chips in the middle (index 2 - 4) give quadruple score
         self.assertEqual(ai_game.evaluate_columns(board=board, current_player=yellow), 500)
         self.assertEqual(ai_game.evaluate_rows(board=board, current_player=yellow), 100)
+
+    def test_end_conidition(self):
+        ai_game = GameMinmaxAI(None)
+        red = objects.RedPlayer()
+        yellow = objects.YellowPlayer()
+        ai_game.current_player = yellow
+        ai_game.current_opponent = red
+        board = [[None, None, None, None, yellow.name, yellow.name],
+                 [None, None, None, None, None, None],
+                 [None, None, None, None, None, None],
+                 [None, None, None, None, yellow.name, yellow.name],
+                 [None, None, None, None, None, None],
+                 [None, None, None, None, None, None],
+                 [None, None, None, None, None, None]]
+        self.assertFalse(ai_game.did_someone_win(board, yellow))
+        board = [[None, None, None, None, None, yellow.name],
+                 [None, None, yellow.name, None, None, None],
+                 [None, None, None, yellow.name, None, None],
+                 [None, None, None, None, yellow.name, None],
+                 [None, None, None, None, None, yellow.name],
+                 [None, None, None, None, None, None],
+                 [None, None, None, None, None, None]]
+        self.assertTrue(ai_game.did_someone_win(board, yellow))
+        board = [[None, None, None, None, None, yellow.name],
+                 [None, None, None, None, None, None],
+                 [None, None, None, None, None, yellow.name],
+                 [None, None, None, None, yellow.name, None],
+                 [None, None, None, yellow.name, None, None],
+                 [None, None, yellow.name, None, None, None],
+                 [None, None, None, None, None, None]]
+        self.assertTrue(ai_game.did_someone_win(board, yellow))
+        board = [[None, None, None, None, None, yellow.name],
+                 [None, None, None, None, None, None],
+                 [None, None, yellow.name, yellow.name, yellow.name, yellow.name],
+                 [None, None, None, None, None, None],
+                 [None, None, None, yellow.name, None, None],
+                 [None, None, yellow.name, None, None, None],
+                 [None, None, None, None, None, None]]
+        self.assertTrue(ai_game.did_someone_win(board, yellow))
+        board = [[None, None, None, None, None, yellow.name],
+                 [None, None, None, None, None, None],
+                 [None, None, None, None, yellow.name, yellow.name],
+                 [None, None, None, None, None, yellow.name],
+                 [None, None, None,  None, None, yellow.name],
+                 [None, None, yellow.name, None, None, yellow.name],
+                 [None, None, None, None, None, None]]
+        self.assertTrue(ai_game.did_someone_win(board, yellow))
 
 if __name__ == '__main__':
     unittest.main()
