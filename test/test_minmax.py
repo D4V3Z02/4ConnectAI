@@ -71,8 +71,8 @@ class TestStringMethods(unittest.TestCase):
                  [None, None, None, None, None, None],
                  [None, None, None, None, None, None]]
         # chips in the middle (index 2 - 4) give quadruple score
-        self.assertEqual(ai_game.evaluate_columns(board=board, current_player=yellow), 500)
-        self.assertEqual(ai_game.evaluate_rows(board=board, current_player=yellow), 100)
+        self.assertEqual(ai_game.evaluate_columns(board=board, current_player=yellow), settings.CHIP_COUNT_2_MULTIPLIER*2)
+        self.assertEqual(ai_game.evaluate_rows(board=board, current_player=yellow), settings.CHIP_COUNT_1_MULTIPLIER*4)
 
         board = [[None, None, yellow_name, None, None, None],
                  [None, None, None, yellow_name, None, None],

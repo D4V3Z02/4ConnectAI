@@ -1,0 +1,7 @@
+*.pyd
+*.c
+*.obj
+*.exp
+*.def
+*.lib
+*.o

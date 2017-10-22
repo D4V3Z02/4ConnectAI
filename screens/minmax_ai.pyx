@@ -1,4 +1,4 @@
-from screens import menu
+import screens.menu as menu
 from collections import deque
 import objects
 from objects import Player
@@ -117,7 +117,7 @@ class GameMinmaxAI(ai.AIGame):
             move_score = settings.CHIP_COUNT_4_MULTIPLIER
         return move_score
 
-    def evaluate_columns(self, board: dict, current_player: Player) -> int:
+    def evaluate_columns(self, board: list, current_player: Player) -> int:
         move_score = 0
         # Check each columns from left to right
         for x in range(settings.COLS):
@@ -136,7 +136,7 @@ class GameMinmaxAI(ai.AIGame):
             move_score += self.get_move_score(consecutive_chips, x)
         return move_score
 
-    def evaluate_rows(self, board: dict, current_player: Player) -> int:
+    def evaluate_rows(self, board: list, current_player: Player) -> int:
         move_score = 0
         # Check each rows from top to bottom
         for y in range(settings.ROWS):
@@ -155,7 +155,7 @@ class GameMinmaxAI(ai.AIGame):
             move_score += self.get_move_score(consecutive_chips, x)
         return move_score
 
-    def evaluate_board(self, board: dict, current_player: Player) -> int:
+    def evaluate_board(self, board: list, current_player: Player) -> int:
         """Scores the passed board for the ai"""
         move_score = self.evaluate_columns(board, current_player)
         move_score += self.evaluate_rows(board, current_player)
@@ -195,7 +195,7 @@ class GameMinmaxAI(ai.AIGame):
             return True
         return False
 
-    def get_amount_of_chips_in_a_row(self, board: dict, current_player: Player, boarder=3) -> list:
+    def get_amount_of_chips_in_a_row(self, board: list, current_player: Player, boarder=3) -> list:
         enemy_player = current_player
         consecutive_chip_counts = []
         # Check each columns from left to right
@@ -255,7 +255,7 @@ class GameMinmaxAI(ai.AIGame):
         return consecutive_chip_counts
 
     def count_consecutive_diagonal_chips(self, consecutive_chips, previous_chip, x, y, direction,
-                                         board: dict, current_player: Player) -> int:
+                                         board: list, current_player: Player) -> int:
         if not self.is_valid_position(x, y):
             return consecutive_chips
         cell = board[x][y]

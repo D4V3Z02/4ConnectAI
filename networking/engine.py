@@ -36,12 +36,12 @@ class Engine(StoppableThread):
         self.loop = asyncio.new_event_loop()
         asyncio.set_event_loop(self.loop)
 
-        if self.mode == settings.NETWORK_ENGINE_MODE.HOST:
+        if self.mode == settings.NetworkEngineMode.HOST:
             self.factory = WebSocketServerFactory()
             self.factory.protocol = ConnectFourServerProtocol
 
             self.coro = self.loop.create_server(self.factory, self.ip, 80)
-        elif self.mode == settings.NETWORK_ENGINE_MODE.JOIN:
+        elif self.mode == settings.NetworkEngineMode.JOIN:
             self.factory = WebSocketClientFactory()
             self.factory.protocol = ConnectFourClientProtocol
 

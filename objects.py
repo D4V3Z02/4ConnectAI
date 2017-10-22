@@ -28,7 +28,7 @@ class RedPlayer(Player):
     def __init__(self):
         super().__init__()
         self.chip = RedChip
-        self.color = settings.COLORS.RED.value
+        self.color = settings.Colors.RED.value
         self.name = settings.PLAYER_RED_NAME
         self.id = settings.PLAYER_RED_ID
 
@@ -37,7 +37,7 @@ class YellowPlayer(Player):
     def __init__(self):
         super().__init__()
         self.chip = YellowChip
-        self.color = settings.COLORS.YELLOW.value
+        self.color = settings.Colors.YELLOW.value
         self.name = settings.PLAYER_YELLOW_NAME
         self.id = settings.PLAYER_YELLOW_ID
 

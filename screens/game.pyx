@@ -1,4 +1,4 @@
-from screens import menu
+import screens.menu as menu
 from collections import deque
 import objects
 import pygame
@@ -17,14 +17,14 @@ class Game:
         self.current_player = None
         self.current_opponent = None
         self.status_text = ""
-        self.status_color = settings.COLORS.WHITE.value
+        self.status_color = settings.Colors.WHITE.value
         self.button_mapping_while_playing = {pygame.K_LEFT: self.move_chip_left,
                                              pygame.K_RIGHT: self.move_chip_right,
                                              pygame.K_DOWN: self.place_chip,
                                              pygame.K_ESCAPE: self.navigate_to_menu}
-        self.state_mapping = {settings.GAME_STATES.PLAYING: self.update_while_playing,
-                              settings.GAME_STATES.WON: self.update_while_won,
-                              settings.GAME_STATES.NO_ONE_WIN: self.update_while_draw}
+        self.state_mapping = {settings.GameStates.PLAYING: self.update_while_playing,
+                              settings.GameStates.WON: self.update_while_won,
+                              settings.GameStates.NO_ONE_WIN: self.update_while_draw}
         self.chips = pygame.sprite.Group()
         self.current_consecutive_chips = deque(maxlen=4)
         self.red_player = objects.RedPlayer()
@@ -48,7 +48,7 @@ class Game:
 
     def init_new_game(self):
         logging.info('Starting new game')
-        self.state = settings.GAME_STATES.PLAYING
+        self.state = settings.GameStates.PLAYING
         self.chips.empty()
         self.current_consecutive_chips.clear()
         self.current_player = self.red_player # The starting player is always the red one
@@ -226,11 +226,11 @@ class Game:
         return -1
 
     def draw_background(self) -> None:
-        self.app.window.fill(settings.COLORS.BLACK.value)
+        self.app.window.fill(settings.Colors.BLACK.value)
         blue_rect_1 = pygame.Rect((0, 0), (settings.WINDOW_SIZE[0], settings.COLUMN_CHOOSING_MARGIN_TOP - 1))
         blue_rect_2 = pygame.Rect((0, settings.COLUMN_CHOOSING_MARGIN_TOP), (settings.WINDOW_SIZE[0], settings.IMAGES_SIDE_SIZE))
-        self.app.window.fill(settings.COLORS.BLUE.value, blue_rect_1)
-        self.app.window.fill(settings.COLORS.BLUE.value, blue_rect_2)
+        self.app.window.fill(settings.Colors.BLUE.value, blue_rect_1)
+        self.app.window.fill(settings.Colors.BLUE.value, blue_rect_2)
 
     def draw_header(self, status_text, status_color) -> None:
         # Status
@@ -240,29 +240,29 @@ class Game:
         status_rect.centery = 25
         self.app.window.blit(status, status_rect)
         # Game name
-        game_name = self.normal_font.render(settings.GAME_NAME + settings.VERSION, True, settings.COLORS.WHITE.value)
+        game_name = self.normal_font.render(settings.GAME_NAME + settings.VERSION, True, settings.Colors.WHITE.value)
         game_name_rect = game_name.get_rect()
         game_name_rect.centery = 25
         game_name_rect.right = self.app.window.get_rect().width - 10
         self.app.window.blit(game_name, game_name_rect)
         # Scores
-        pygame.draw.line(self.app.window, settings.COLORS.BLACK.value, (game_name_rect.left - 15, 0), (game_name_rect.left - 15, settings.COLUMN_CHOOSING_MARGIN_TOP - 1))
-        scores_yellow = self.title_font.render(str(self.yellow_player.score), True, settings.COLORS.YELLOW.value)
+        pygame.draw.line(self.app.window, settings.Colors.BLACK.value, (game_name_rect.left - 15, 0), (game_name_rect.left - 15, settings.COLUMN_CHOOSING_MARGIN_TOP - 1))
+        scores_yellow = self.title_font.render(str(self.yellow_player.score), True, settings.Colors.YELLOW.value)
         scores_yellow_rect = scores_yellow.get_rect()
         scores_yellow_rect.centery = 25
         scores_yellow_rect.right = game_name_rect.left - 25
         self.app.window.blit(scores_yellow, scores_yellow_rect)
-        dash = self.title_font.render('-', True, settings.COLORS.WHITE.value)
+        dash = self.title_font.render('-', True, settings.Colors.WHITE.value)
         dash_rect = dash.get_rect()
         dash_rect.centery = 25
         dash_rect.right = scores_yellow_rect.left - 5
         self.app.window.blit(dash, dash_rect)
-        scores_red = self.title_font.render(str(self.red_player.score), True, settings.COLORS.RED.value)
+        scores_red = self.title_font.render(str(self.red_player.score), True, settings.Colors.RED.value)
         scores_red_rect = scores_red.get_rect()
         scores_red_rect.centery = 25
         scores_red_rect.right = dash_rect.left - 5
         self.app.window.blit(scores_red, scores_red_rect)
-        pygame.draw.line(self.app.window, settings.COLORS.BLACK.value, (scores_red_rect.left - 15, 0), (scores_red_rect.left - 15, settings.COLUMN_CHOOSING_MARGIN_TOP - 1))
+        pygame.draw.line(self.app.window, settings.Colors.BLACK.value, (scores_red_rect.left - 15, 0), (scores_red_rect.left - 15, settings.COLUMN_CHOOSING_MARGIN_TOP - 1))
 
     def place_chip(self) -> None:
         chip_row_stop = self.get_free_row(self.current_player_chip_column)
@@ -279,15 +279,14 @@ class Game:
                     self.win_sound.play()
                 if self.applause_sound:
                     self.applause_sound.play()
-                self.state = settings.GAME_STATES.WON
-                pygame.time.set_timer(settings.EVENTS.WINNER_CHIPS_EVENT.value, 600)
-                logging.info(self.current_player.name + ' win')
+                self.state = settings.GameStates.WON
+                pygame.time.set_timer(settings.Events.WINNER_CHIPS_EVENT.value, 600)
                 self.current_player.score += 1
             elif self.did_no_one_win():
                 pygame.mixer.music.stop()
                 if self.boo_sound:
                     self.boo_sound.play()
-                self.state = settings.GAME_STATES.NO_ONE_WIN
+                self.state = settings.GameStates.NO_ONE_WIN
                 logging.info('No one won')
             else:  # It's the other player's turn if the current player didn't win
                 if self.current_player == self.yellow_player:
@@ -345,12 +344,12 @@ class Game:
     def update_while_won(self) -> None:
         for event in pygame.event.get():
             self.check_for_quitting(event)
-            if event.type == settings.EVENTS.WINNER_CHIPS_EVENT.value:
+            if event.type == settings.Events.WINNER_CHIPS_EVENT.value:
                 for x in range(0, settings.COLS):
                     for y in range(0, settings.ROWS):
                         if isinstance(self.highlighted_chips[x][y], bool):
                             self.highlighted_chips[x][y] = not self.highlighted_chips[x][y]
-                pygame.time.set_timer(settings.EVENTS.WINNER_CHIPS_EVENT.value, 600)
+                pygame.time.set_timer(settings.Events.WINNER_CHIPS_EVENT.value, 600)
         self.status_text = self.current_player.name + ' player wins!'
         self.status_color = self.current_player.color
 
@@ -358,7 +357,7 @@ class Game:
         for event in pygame.event.get():
            self.check_for_quitting(event)
         self.status_text = 'DRAW'
-        self.status_color = settings.COLORS.WHITE.value
+        self.status_color = settings.Colors.WHITE.value
 
     def check_for_quitting(self, pygame_event) -> None:
         if pygame_event.type == pygame.QUIT:

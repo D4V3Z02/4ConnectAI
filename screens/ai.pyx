@@ -1,4 +1,4 @@
-from screens import game
+import screens.game as game
 import settings
 import pygame
 import sys
