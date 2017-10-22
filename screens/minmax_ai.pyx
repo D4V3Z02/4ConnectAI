@@ -23,7 +23,7 @@ class GameMinmaxAI(ai.AIGame):
         print('Starting minmax game')
         Game.__init__(self, app)
 
-    def min_max(self, board: dict, depth: int, ai_player: Player) -> int:
+    def min_max(self, list board, int depth, ai_player):
         """
         Returns the column of the best move
         :param board: the current board
@@ -38,7 +38,7 @@ class GameMinmaxAI(ai.AIGame):
             if chip_row_stop >= 0:
                 child_board = copy.copy(copied_board)
                 # make a move in the copied board
-                child_board[column][chip_row_stop] = ai_player.name
+                child_board[column][chip_row_stop] = ai_player.id
                 move_score = self.min(depth - 1, child_board, ai_player)
                 if column >= 2 and column <= 4:
                     move_score = move_score*settings.MIDDLE_MULTIPLIER
@@ -56,14 +56,14 @@ class GameMinmaxAI(ai.AIGame):
     def copy_board(self, board: list) -> list:
         return [x[:] for x in board]
 
-    def max(self, depth: int, board: list, ai_player: Player)-> int:
+    def max(self, int depth, list board, ai_player):
         # make all possible moves for the current player
         possible_moves = []
         for column in range(len(board)):
             chip_row_stop = self.get_free_row(column, board=board)
             if chip_row_stop >= 0:
                 child_board = self.copy_board(board)
-                child_board[column][chip_row_stop] = ai_player.name
+                child_board[column][chip_row_stop] = ai_player.id
                 possible_moves.append(child_board)
         # end recursion if depth is reached or no moves possible
         if depth == 0 or len(possible_moves) == 0 or self.did_someone_win(board, ai_player):
@@ -74,13 +74,13 @@ class GameMinmaxAI(ai.AIGame):
             move_score = max(move_score, min_ret)
         return move_score
 
-    def min(self, depth: int, board: list, ai_player: Player) -> int:
+    def min(self, int depth, list board, ai_player):
         possible_moves = []
         for column in range(len(board)):
             chip_row_stop = self.get_free_row(column, board=board)
             if chip_row_stop >= 0:
                 child_board = self.copy_board(board)
-                child_board[column][chip_row_stop] = self.get_other_player(ai_player).name
+                child_board[column][chip_row_stop] = self.get_other_player(ai_player).id
                 possible_moves.append(child_board)
         # end recursion if depth is reached or no moves possible
         if depth == 0 or len(possible_moves) == 0 or self.did_someone_win(board, ai_player):
@@ -97,7 +97,8 @@ class GameMinmaxAI(ai.AIGame):
         else:
             return self.current_player
 
-    def place_chip_ai(self, column) -> None:
+    def place_chip_ai(self, int column) -> None:
+        cdef i = 0
         for i in range(column):
             self.move_chip_right()
         self.place_chip()
@@ -105,7 +106,7 @@ class GameMinmaxAI(ai.AIGame):
     def is_ai_playing(self) -> bool:
         return self.current_player.id == 2
 
-    def get_move_score(self, chip_count: int, column: int) -> int:
+    def get_move_score(self, int chip_count, int column) -> int:
         move_score = 0
         if chip_count == 1:
             move_score = settings.CHIP_COUNT_1_MULTIPLIER
@@ -117,8 +118,10 @@ class GameMinmaxAI(ai.AIGame):
             move_score = settings.CHIP_COUNT_4_MULTIPLIER
         return move_score
 
-    def evaluate_columns(self, board: list, current_player: Player) -> int:
-        move_score = 0
+    def evaluate_columns(self, list board, current_player: Player) -> int:
+        cdef int move_score = 0
+        cdef int x = 0
+        cdef int y = 0
         # Check each columns from left to right
         for x in range(settings.COLS):
             consecutive_chips = 0
@@ -136,7 +139,7 @@ class GameMinmaxAI(ai.AIGame):
             move_score += self.get_move_score(consecutive_chips, x)
         return move_score
 
-    def evaluate_rows(self, board: list, current_player: Player) -> int:
+    def evaluate_rows(self, list board, current_player: Player) -> int:
         move_score = 0
         # Check each rows from top to bottom
         for y in range(settings.ROWS):
@@ -155,7 +158,7 @@ class GameMinmaxAI(ai.AIGame):
             move_score += self.get_move_score(consecutive_chips, x)
         return move_score
 
-    def evaluate_board(self, board: list, current_player: Player) -> int:
+    def evaluate_board(self, list board, current_player) -> int:
         """Scores the passed board for the ai"""
         move_score = self.evaluate_columns(board, current_player)
         move_score += self.evaluate_rows(board, current_player)
@@ -185,20 +188,23 @@ class GameMinmaxAI(ai.AIGame):
             #print('enemy won')
         return move_score
 
-    def get_enemy_streak(self, board: list, current_player: Player) -> list:
+    def get_enemy_streak(self, list board, current_player):
         return self.get_amount_of_chips_in_a_row(board, self.get_other_player(current_player))
 
-    def did_someone_win(self, board: list, current_player: Player) -> bool:
+    def did_someone_win(self, list board, current_player: Player) -> bool:
         ai_player_chips = self.get_amount_of_chips_in_a_row(board, current_player)
         enemy_chips = self.get_enemy_streak(board, current_player)
         if 4 in enemy_chips or 4 in ai_player_chips:
             return True
         return False
 
-    def get_amount_of_chips_in_a_row(self, board: list, current_player: Player, boarder=3) -> list:
+    def get_amount_of_chips_in_a_row(self, list board, current_player: Player, int boarder=3) -> list:
         enemy_player = current_player
-        consecutive_chip_counts = []
+        cdef list consecutive_chip_counts = []
         # Check each columns from left to right
+        cdef int consecutive_chips = 0
+        cdef x
+        cdef y
         for x in range(0, settings.COLS):
             consecutive_chips = 0
             previous_chip = None
@@ -254,8 +260,8 @@ class GameMinmaxAI(ai.AIGame):
                 consecutive_chip_counts.append(consecutive_chips)
         return consecutive_chip_counts
 
-    def count_consecutive_diagonal_chips(self, consecutive_chips, previous_chip, x, y, direction,
-                                         board: list, current_player: Player) -> int:
+    def count_consecutive_diagonal_chips(self, int consecutive_chips, previous_chip, int x, int y, direction,
+                                         list board, current_player: Player) -> int:
         if not self.is_valid_position(x, y):
             return consecutive_chips
         cell = board[x][y]
@@ -272,7 +278,7 @@ class GameMinmaxAI(ai.AIGame):
         return self.count_consecutive_diagonal_chips(consecutive_chips, previous_chip, x, y,
                                                      direction, board, current_player)
 
-    def compute_direction_pos(self, x, y, direction):
+    def compute_direction_pos(self, int x, int y, direction):
         x = x + abs(direction[0]) if direction[0] > 0 else x - abs(direction[0])
         y = y + abs(direction[1]) if direction[1] > 0 else y - abs(direction[1])
         return x, y

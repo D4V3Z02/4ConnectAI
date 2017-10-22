@@ -1,7 +1,6 @@
 import pygame
 import utils
 import settings
-from abc import ABC
 
 
 class RedChip(pygame.sprite.Sprite):
@@ -18,7 +17,12 @@ class YellowChip(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
 
-class Player(ABC):
+cdef class Player:
+
+    cdef public int score
+    cdef public str name
+    cdef public int id
+
     def __init__(self):
         self.score = 0
         super().__init__()

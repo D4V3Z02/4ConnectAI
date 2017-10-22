@@ -12,7 +12,7 @@ class AIGame(game.Game):
             return
         game.Game.__init__(self, app)
 
-    def update_while_playing(self) -> None:
+    def update_while_playing(self):
         if not self.current_player_chip:
             self.current_player_chip = self.current_player.chip()
             self.chips.add(self.current_player_chip)
@@ -31,7 +31,7 @@ class AIGame(game.Game):
         self.status_text = self.current_player.name + ' player\'s turn'
         self.status_color = self.current_player.color
 
-    def update_ai_player(self) -> None:
+    def update_ai_player(self):
         t1 = time.time()
         best_move, highest_move_score = self.min_max(self.board, settings.DEPTH, self.current_player)
         self.place_chip_ai(best_move)
