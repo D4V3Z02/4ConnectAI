@@ -7,7 +7,6 @@ import utils
 import logging
 import sys
 from cpython cimport bool
-import numpy as np
 
 
 cdef class Game:
@@ -105,7 +104,7 @@ cdef class Game:
         # check right chips
         if space_right:
             for x in range(chip_x + 1, chip_x + space_right + 1):
-                if self.board[x][chip_y] == self.current_player.name:
+                if self.board[x][chip_y] == self.current_player.id:
                     chip_count += 1
                     self.current_consecutive_chips.append((x, chip_y))
                 else:
@@ -113,7 +112,7 @@ cdef class Game:
         # check left chips
         if chip_x:
             for x in range(chip_x - 1, -1, -1):
-                if self.board[x][chip_y] == self.current_player.name:
+                if self.board[x][chip_y] == self.current_player.id:
                     chip_count += 1
                     self.current_consecutive_chips.append((x, chip_y))
                 else:
@@ -126,7 +125,7 @@ cdef class Game:
         chip_count = 1
         # check chips from the top to bottom
         for y in range(chip_y + 1, settings.ROWS):
-            if self.board[chip_x][y] == self.current_player.name:
+            if self.board[chip_x][y] == self.current_player.id:
                 self.current_consecutive_chips.append((chip_x, y))
                 chip_count += 1
             else:
@@ -141,7 +140,7 @@ cdef class Game:
         x = chip_x + 1
         y = chip_y - 1
         while self.is_valid_position(x, y):
-            if self.board[x][y] == self.current_player.name:
+            if self.board[x][y] == self.current_player.id:
                 chip_count += 1
                 self.current_consecutive_chips.append((x, y))
                 x += 1
@@ -152,7 +151,7 @@ cdef class Game:
         x = chip_x - 1
         y = chip_y + 1
         while self.is_valid_position(x, y):
-            if self.board[x][y] == self.current_player.name:
+            if self.board[x][y] == self.current_player.id:
                 chip_count += 1
                 self.current_consecutive_chips.append((x, y))
                 x -= 1
@@ -170,7 +169,7 @@ cdef class Game:
         x = chip_x - 1
         y = chip_y - 1
         while self.is_valid_position(x, y):
-            if self.board[x][y] == self.current_player.name:
+            if self.board[x][y] == self.current_player.id:
                 chip_count += 1
                 self.current_consecutive_chips.append((x, y))
                 x -= 1
@@ -180,7 +179,7 @@ cdef class Game:
         x = chip_x + 1
         y = chip_y + 1
         while self.is_valid_position(x, y):
-            if self.board[x][y] == self.current_player.name:
+            if self.board[x][y] == self.current_player.id:
                 chip_count += 1
                 self.current_consecutive_chips.append((x, y))
                 x += 1

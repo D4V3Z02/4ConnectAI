@@ -22,13 +22,16 @@ cdef class Player:
     cdef public int score
     cdef public str name
     cdef public int id
+    cdef public chip
+    cdef public color
 
     def __init__(self):
         self.score = 0
         super().__init__()
 
 
-class RedPlayer(Player):
+cdef class RedPlayer(Player):
+
     def __init__(self):
         super().__init__()
         self.chip = RedChip
@@ -37,7 +40,8 @@ class RedPlayer(Player):
         self.id = settings.PLAYER_RED_ID
 
 
-class YellowPlayer(Player):
+cdef class YellowPlayer(Player):
+
     def __init__(self):
         super().__init__()
         self.chip = YellowChip

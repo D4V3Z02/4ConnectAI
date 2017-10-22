@@ -31,6 +31,7 @@ class GameMinmaxAI(ai.AIGame):
         """
         # iterate over possible placements
         possible_moves = {}
+        print(self.board)
         copied_board = self.copy_board(board)
         for column in range(len(board)):
             chip_row_stop = self.get_free_row(column, board=board)
@@ -128,11 +129,11 @@ class GameMinmaxAI(ai.AIGame):
             previous_chip = None
             for y in range(0, settings.ROWS):
                 cell = board[x][y]
-                if cell == current_player.name and consecutive_chips == 0:
+                if cell == current_player.id and consecutive_chips == 0:
                     consecutive_chips = 1
-                elif cell == current_player.name and cell == previous_chip:
+                elif cell == current_player.id and cell == previous_chip:
                     consecutive_chips += 1
-                elif cell != current_player.name:
+                elif cell != current_player.id:
                     move_score += self.get_move_score(consecutive_chips, x)
                     consecutive_chips = 0
                 previous_chip = cell
@@ -147,11 +148,11 @@ class GameMinmaxAI(ai.AIGame):
             previous_chip = None
             for x in range(settings.COLS):
                 cell = board[x][y]
-                if cell == current_player.name and consecutive_chips == 0:
+                if cell == current_player.id and consecutive_chips == 0:
                     consecutive_chips = 1
-                elif cell == current_player.name and cell == previous_chip:
+                elif cell == current_player.id and cell == previous_chip:
                     consecutive_chips += 1
-                elif cell != current_player.name:
+                elif cell != current_player.id:
                     move_score += self.get_move_score(consecutive_chips, x)
                     consecutive_chips = 0
                 previous_chip = cell
@@ -160,7 +161,7 @@ class GameMinmaxAI(ai.AIGame):
 
     def evaluate_board(self, list board, current_player) -> int:
         """Scores the passed board for the ai"""
-        move_score = self.evaluate_columns(board, current_player)
+        cdef int move_score = self.evaluate_columns(board, current_player)
         move_score += self.evaluate_rows(board, current_player)
         # Check each "/" diagonal starting at the top left corner
         x = 0
@@ -203,18 +204,18 @@ class GameMinmaxAI(ai.AIGame):
         cdef list consecutive_chip_counts = []
         # Check each columns from left to right
         cdef int consecutive_chips = 0
-        cdef x
-        cdef y
+        cdef int x
+        cdef int y
         for x in range(0, settings.COLS):
             consecutive_chips = 0
             previous_chip = None
             for y in range(0, settings.ROWS):
                 cell = board[x][y]
-                if cell == enemy_player.name and consecutive_chips == 0:
+                if cell == enemy_player.id and consecutive_chips == 0:
                     consecutive_chips = 1
-                elif cell == enemy_player.name and cell == previous_chip:
+                elif cell == enemy_player.id and cell == previous_chip:
                     consecutive_chips += 1
-                elif cell != enemy_player.name:
+                elif cell != enemy_player.id:
                     consecutive_chips = 0
                 if consecutive_chips >= boarder:
                     consecutive_chip_counts.append(consecutive_chips)
@@ -225,11 +226,11 @@ class GameMinmaxAI(ai.AIGame):
             previous_chip = None
             for x in range(0, settings.COLS):
                 cell = board[x][y]
-                if cell == enemy_player.name and consecutive_chips == 0:
+                if cell == enemy_player.id and consecutive_chips == 0:
                     consecutive_chips = 1
-                elif cell == enemy_player.name and cell == previous_chip:
+                elif cell == enemy_player.id and cell == previous_chip:
                     consecutive_chips += 1
-                elif cell != enemy_player.name:
+                elif cell != enemy_player.id:
                     consecutive_chips = 0
                 if consecutive_chips >= boarder:
                     consecutive_chip_counts.append(consecutive_chips)
@@ -265,11 +266,11 @@ class GameMinmaxAI(ai.AIGame):
         if not self.is_valid_position(x, y):
             return consecutive_chips
         cell = board[x][y]
-        if cell == current_player.name and consecutive_chips == 0:
+        if cell == current_player.id and consecutive_chips == 0:
             consecutive_chips = 1
-        elif cell == current_player.name and cell == previous_chip:
+        elif cell == current_player.id and cell == previous_chip:
             consecutive_chips += 1
-        elif cell != current_player.name:
+        elif cell != current_player.id:
             consecutive_chips = 0
         if consecutive_chips == 4:
             return consecutive_chips
