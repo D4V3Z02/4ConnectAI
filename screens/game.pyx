@@ -11,10 +11,6 @@ from cpython cimport bool
 
 cdef class Game:
 
-    cdef public list board
-    cdef public dict state_mapping
-    cdef public dict button_mapping_while_playing
-
     def __init__(self, app):
         logging.info('Initializing game')
         self.app = app
@@ -218,7 +214,7 @@ cdef class Game:
 
                 self.app.window.blit(image, (x * settings.IMAGES_SIDE_SIZE, y * settings.IMAGES_SIDE_SIZE + settings.BOARD_MARGIN_TOP))
 
-    cpdef int get_free_row(self, int column, board=None):
+    cpdef int get_free_row(self, int column, board):
         """Given a column, get the latest row number which is free."""
         if board is None:
             board = self.board
@@ -272,7 +268,7 @@ cdef class Game:
         pygame.draw.line(self.app.window, settings.Colors.BLACK.value, (scores_red_rect.left - 15, 0), (scores_red_rect.left - 15, settings.COLUMN_CHOOSING_MARGIN_TOP - 1))
 
     cpdef place_chip(self):
-        chip_row_stop = self.get_free_row(self.current_player_chip_column)
+        chip_row_stop = self.get_free_row(self.current_player_chip_column, self.board)
         if chip_row_stop >= 0:  # Actually move the chip in the current column and reset the current one (to create a new one later)
             if self.placed_sound:
                 self.placed_sound.play()
