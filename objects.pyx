@@ -18,13 +18,6 @@ class YellowChip(pygame.sprite.Sprite):
 
 
 cdef class Player:
-
-    cdef public int score
-    cdef public str name
-    cdef public short id
-    cdef public chip
-    cdef public color
-
     def __init__(self):
         self.score = 0
         super().__init__()

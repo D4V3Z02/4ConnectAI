@@ -3,6 +3,7 @@ from collections import deque
 import objects
 import pygame
 import settings
+cimport settings
 import utils
 import logging
 import sys
@@ -63,8 +64,8 @@ cdef class Game:
             self.board.append([])
             self.highlighted_chips.append([])
             for y in range(0, settings.ROWS):
-                self.board[x].insert(y, None)
-                self.highlighted_chips[x].insert(y, None)
+                self.board[x].insert(y, settings.EMPTY_SYMBOL)
+                self.highlighted_chips[x].insert(y, settings.EMPTY_SYMBOL)
         logging.info('Loading random music')
         utils.load_random_music(['techno_dreaming.wav', 'techno_celebration.wav', 'electric_rain.wav', 'snake_trance.wav'], volume=self.musics_volume)
 
@@ -216,13 +217,11 @@ cdef class Game:
 
     cpdef int get_free_row(self, int column, board):
         """Given a column, get the latest row number which is free."""
-        if board is None:
-            board = self.board
         column_list = board[column]
         cdef int y = 0
         for y in range(len(column_list)):
             # If there's nothing in the current cell
-            if column_list[y] is None:
+            if column_list[y] == settings.EMPTY_SYMBOL:
                 # If we're in the latest cell or if the next cell isn't empty
                 if (y == settings.ROWS - 1) or (not y + 1 > settings.ROWS - 1 and column_list[y + 1]):
                     return y

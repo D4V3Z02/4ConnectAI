@@ -4,6 +4,7 @@ import sys
 import os
 import gui
 import utils
+from cpython cimport bool
 
 
 class GuiTheme(gui.DefaultTheme):
@@ -76,7 +77,8 @@ PLAYER_RED_ID = 1
 PLAYER_YELLOW_NAME = 'YELLOW'
 PLAYER_YELLOW_ID = 2
 
-EMPTY_SYMBOL = 0
+cdef bool EMPTY_SYMBOL
+EMPTY_SYMBOL = False
 
 RED_CHIP_IMAGE = 'red_chip.png'
 YELLOW_CHIP_IMAGE = 'yellow_chip.png'

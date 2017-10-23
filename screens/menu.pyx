@@ -1,4 +1,4 @@
-from screens import game
+cimport screens.game as game
 from screens import lobby
 from screens import negamax_ai
 from screens import random_ai

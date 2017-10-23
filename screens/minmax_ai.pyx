@@ -1,6 +1,5 @@
 import screens.menu as menu
 from collections import deque
-import objects
 from objects import Player
 import settings
 import utils
@@ -10,13 +9,13 @@ import objects
 from screens.game import Game
 import copy
 import random
-from screens import ai
+cimport screens.ai as ai
 
 
 INF = 999999999
 
 
-class GameMinmaxAI(ai.AIGame):
+cdef class GameMinmaxAI(ai.AIGame):
     def __init__(self, app):
         if (app is None):
             return
@@ -35,7 +34,7 @@ class GameMinmaxAI(ai.AIGame):
         cdef list copied_board, child_board
         copied_board = self.copy_board(board)
         for column in range(len(board)):
-            chip_row_stop = self.get_free_row(column, board=board)
+            chip_row_stop = self.get_free_row(column, board)
             # check if there is a free row in the current column
             if chip_row_stop >= 0:
                 child_board = copy.copy(copied_board)
