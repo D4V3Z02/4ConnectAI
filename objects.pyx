@@ -21,7 +21,7 @@ cdef class Player:
 
     cdef public int score
     cdef public str name
-    cdef public int id
+    cdef public short id
     cdef public chip
     cdef public color
 

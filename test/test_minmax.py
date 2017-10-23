@@ -28,7 +28,7 @@ class TestStringMethods(unittest.TestCase):
     def test_evaluate_board(self):
         red = objects.RedPlayer()
         yellow = objects.YellowPlayer()
-        yellow_name = yellow.name
+        yellow_name = yellow.id
         red_name = red.name
         board = [[None, None, None, None, None, yellow_name],
                  [None, None, None, None, None, None],
@@ -101,44 +101,44 @@ class TestStringMethods(unittest.TestCase):
         yellow = objects.YellowPlayer()
         ai_game.current_player = yellow
         ai_game.current_opponent = red
-        board = [[None, None, None, None, yellow.name, yellow.name],
+        board = [[None, None, None, None, yellow.id, yellow.id],
                  [None, None, None, None, None, None],
                  [None, None, None, None, None, None],
-                 [None, None, None, None, yellow.name, yellow.name],
+                 [None, None, None, None, yellow.id, yellow.id],
                  [None, None, None, None, None, None],
                  [None, None, None, None, None, None],
                  [None, None, None, None, None, None]]
         self.assertFalse(ai_game.did_someone_win(board, yellow))
-        board = [[None, None, None, None, None, yellow.name],
-                 [None, None, yellow.name, None, None, None],
-                 [None, None, None, yellow.name, None, None],
-                 [None, None, None, None, yellow.name, None],
-                 [None, None, None, None, None, yellow.name],
+        board = [[None, None, None, None, None, yellow.id],
+                 [None, None, yellow.id, None, None, None],
+                 [None, None, None, yellow.id, None, None],
+                 [None, None, None, None, yellow.id, None],
+                 [None, None, None, None, None, yellow.id],
                  [None, None, None, None, None, None],
                  [None, None, None, None, None, None]]
         self.assertTrue(ai_game.did_someone_win(board, yellow))
-        board = [[None, None, None, None, None, yellow.name],
+        board = [[None, None, None, None, None, yellow.id],
                  [None, None, None, None, None, None],
-                 [None, None, None, None, None, yellow.name],
-                 [None, None, None, None, yellow.name, None],
-                 [None, None, None, yellow.name, None, None],
-                 [None, None, yellow.name, None, None, None],
+                 [None, None, None, None, None, yellow.id],
+                 [None, None, None, None, yellow.id, None],
+                 [None, None, None, yellow.id, None, None],
+                 [None, None, yellow.id, None, None, None],
                  [None, None, None, None, None, None]]
         self.assertTrue(ai_game.did_someone_win(board, yellow))
-        board = [[None, None, None, None, None, yellow.name],
+        board = [[None, None, None, None, None, yellow.id],
                  [None, None, None, None, None, None],
-                 [None, None, yellow.name, yellow.name, yellow.name, yellow.name],
+                 [None, None, yellow.id, yellow.id, yellow.id, yellow.id],
                  [None, None, None, None, None, None],
-                 [None, None, None, yellow.name, None, None],
-                 [None, None, yellow.name, None, None, None],
+                 [None, None, None, yellow.id, None, None],
+                 [None, None, yellow.id, None, None, None],
                  [None, None, None, None, None, None]]
         self.assertTrue(ai_game.did_someone_win(board, yellow))
-        board = [[None, None, None, None, None, yellow.name],
+        board = [[None, None, None, None, None, yellow.id],
                  [None, None, None, None, None, None],
-                 [None, None, None, None, yellow.name, yellow.name],
-                 [None, None, None, None, None, yellow.name],
-                 [None, None, None,  None, None, yellow.name],
-                 [None, None, yellow.name, None, None, yellow.name],
+                 [None, None, None, None, yellow.id, yellow.id],
+                 [None, None, None, None, None, yellow.id],
+                 [None, None, None,  None, None, yellow.id],
+                 [None, None, yellow.id, None, None, yellow.id],
                  [None, None, None, None, None, None]]
         self.assertTrue(ai_game.did_someone_win(board, yellow))
 
