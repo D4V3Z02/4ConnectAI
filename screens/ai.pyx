@@ -1,5 +1,7 @@
 cimport screens.game as game
+cimport screens.minmax_ai
 import settings
+cimport settings
 import pygame
 import sys
 import time

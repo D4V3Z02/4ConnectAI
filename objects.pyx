@@ -1,6 +1,7 @@
 import pygame
 import utils
 import settings
+cimport settings
 
 
 class RedChip(pygame.sprite.Sprite):

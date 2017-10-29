@@ -64,31 +64,30 @@ LAN_TIMEOUT = 5
 RESOURCES_ROOT = os.path.join(sys.MEIPASS, 'resources') if getattr(sys, 'frozen', False) else 'resources'
 
 CONFIG_FILE = 'connectfour.ini'
-DEFAULT_CONFIG = {
+cdef dict DEFAULT_CONFIG = {
     'master_server_endpoint': 'https://cfms.epoc.fr/api/',
     'sounds_volume': 0.1,
     'music_volume': 0.2,
     'game_name': ''
 }
 
-PLAYER_RED_NAME = 'RED'
-PLAYER_RED_ID = 1
+cdef str PLAYER_RED_NAME = 'RED'
+cdef short PLAYER_RED_ID = 1
 
-PLAYER_YELLOW_NAME = 'YELLOW'
-PLAYER_YELLOW_ID = 2
+cdef str PLAYER_YELLOW_NAME = 'YELLOW'
+cdef short PLAYER_YELLOW_ID = 2
 
-cdef bool EMPTY_SYMBOL
-EMPTY_SYMBOL = False
+cdef bool EMPTY_SYMBOL = False
 
-RED_CHIP_IMAGE = 'red_chip.png'
-YELLOW_CHIP_IMAGE = 'yellow_chip.png'
+cdef str RED_CHIP_IMAGE = 'red_chip.png'
+cdef str YELLOW_CHIP_IMAGE = 'yellow_chip.png'
 
-GAME_NAME = 'AI Connect Four v'
+cdef str GAME_NAME = 'AI Connect Four v'
 
-DEPTH = 5
-MIDDLE_MULTIPLIER = 2
+cdef short DEPTH = 5
+cdef short MIDDLE_MULTIPLIER = 2
 
-CHIP_COUNT_1_MULTIPLIER = 1e1
-CHIP_COUNT_2_MULTIPLIER = 1e2
-CHIP_COUNT_3_MULTIPLIER = 1e3
-CHIP_COUNT_4_MULTIPLIER = 1e5
+cdef long CHIP_COUNT_1_MULTIPLIER = 10
+cdef long CHIP_COUNT_2_MULTIPLIER = 100
+cdef long CHIP_COUNT_3_MULTIPLIER = 1000
+cdef long CHIP_COUNT_4_MULTIPLIER = 100000
