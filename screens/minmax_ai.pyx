@@ -17,7 +17,7 @@ import screens.ai as ai
 from cpython cimport bool
 
 
-INF = 999999999
+BIG_VALUE = 999999999
 
 
 cdef class GameMinmaxAI(ai.AIGame):
@@ -45,21 +45,21 @@ cdef class GameMinmaxAI(ai.AIGame):
 
     cdef Move max_turn(self, int depth, list board, Player ai_player, short current_column):
         # make all possible moves for the current player
-        cdef list child_board, possible_moves = []
+        cdef list child_board, potential_moves = []
         cdef int chip_row_stop = 0
         for column in range(len(board)):
             chip_row_stop = self.get_free_row(column, board=board)
             if chip_row_stop >= 0:
                 child_board = self.copy_board(board)
                 child_board[column][chip_row_stop] = ai_player.id
-                possible_moves.append(PotentialMove(child_board, column))
+                potential_moves.append(PotentialMove(child_board, column))
         # end recursion if depth is reached or no moves possible
-        if depth == settings.MAX_DEPTH or len(possible_moves) == 0 or self.did_someone_win(board, depth):
+        if depth == settings.MAX_DEPTH or len(potential_moves) == 0 or self.did_someone_win(board, depth):
             return Move(self.evaluate_board(board, ai_player, depth), current_column)
-        cdef Move move = Move(-INF, 0)
+        cdef Move move = Move(-BIG_VALUE, 0)
         cdef Move min_move
-        for possible_move in possible_moves:
-            min_move = self.min_turn(depth + 1, possible_move.board, ai_player, possible_move.column)
+        for potential_move in potential_moves:
+            min_move = self.min_turn(depth + 1, potential_move.board, ai_player, potential_move.column)
             if min_move.score > move.score:
                 move = min_move
         return move
@@ -70,21 +70,21 @@ cdef class GameMinmaxAI(ai.AIGame):
         return move
 
     cdef Move min_turn(self, int depth, list board, Player ai_player, short current_column):
-        cdef list child_board, possible_moves = []
+        cdef list child_board, potential_moves = []
         cdef int chip_row_stop = 0
         for column in range(len(board)):
             chip_row_stop = self.get_free_row(column, board=board)
             if chip_row_stop >= 0:
                 child_board = self.copy_board(board)
                 child_board[column][chip_row_stop] = self.get_other_player(ai_player).id
-                possible_moves.append(PotentialMove(child_board, column))
+                potential_moves.append(PotentialMove(child_board, column))
         # end recursion if depth is reached or no moves possible
-        if depth == settings.MAX_DEPTH or len(possible_moves) == 0 or self.did_someone_win(board, depth):
+        if depth == settings.MAX_DEPTH or len(potential_moves) == 0 or self.did_someone_win(board, depth):
             return Move(self.evaluate_board(board, ai_player, depth), current_column)
-        cdef Move move = Move(INF, 0)
+        cdef Move move = Move(BIG_VALUE, 0)
         cdef Move max_move
-        for possible_move in possible_moves:
-            max_move = self.max_turn(depth + 1, possible_move.board, ai_player, possible_move.column)
+        for potential_move in potential_moves:
+            max_move = self.max_turn(depth + 1, potential_move.board, ai_player, potential_move.column)
             if max_move.score < move.score:
                 move = max_move
         return move
@@ -186,14 +186,14 @@ cdef class GameMinmaxAI(ai.AIGame):
             move_score += self.get_move_score(consecutive_chips, x)
         # if other player won
         if depth <= 2 and self.did_player_win(board, self.red_player):
-            move_score = -INF + 1
+            move_score = -BIG_VALUE + 1
             #print('enemy win', move_score, depth)
             #print(board)
         if depth <= 2 and self.did_player_win(board, self.yellow_player):
-            move_score = INF - 1
+            move_score = BIG_VALUE - 1
             #print('I win', move_score)
             #print(board)
-        print('move_score', move_score, 'board', board, 'player', current_player)
+        #print('move_score', move_score, 'board', board, 'player', current_player)
         return move_score
 
     cdef bool did_someone_win(self, list board, short depth):
