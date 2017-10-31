@@ -5,29 +5,8 @@ This is a fork of an existing python-implementation of Connect Four from https:/
 ## Improvements:
 - Added faster win-condition checking (does not check the whole board after one chip has been played)
 - Added an AI which plays random turns
-
-## TODO:
-
-- This game is going to get an AI-opponent
-
-# From EpocDotFr's Connect Four page:
-
-The [Connect Four](https://en.wikipedia.org/wiki/Connect_Four) game, implemented in Python.
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/EpocDotFr/connectfour/master/screenshot.png">
-</p>
-
-## Features
-
-  - All the Connect Four rules
-  - Chips that made the player win are highlighted
-  - Sound effects!
-  - Musics!
-  - Two players, either:
-    - On the same computer
-    - (WIP) LAN game
-    - (WIP) Online game
+- Added an AI which uses the MinMax-Algorithm
+- Optimized Python Code with Cython
 
 ## Prerequisites
 
@@ -36,14 +15,13 @@ Python 3.6
 ## Installation
 
 Clone this repo, and then the usual `pip install -r requirements.txt`.
+Then run `bash cython_linux.sh` or `bash cython_windows.sh` depedendant on your Operating System.
 
 ## Usage
 
 ```
-python run.py [--dev]
+python run.py
 ```
-
-`--dev` enable WIP features (like network games).
 
 ## Controls
 
