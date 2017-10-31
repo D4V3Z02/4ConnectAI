@@ -1,18 +1,20 @@
-from screens import game
+cimport screens.game as game
+cimport screens.minmax_ai
 import settings
+cimport settings
 import pygame
 import sys
+import time
 
 
-class AIGame(game.Game):
+cdef class AIGame(game.Game):
 
     def __init__(self, app):
         if (app is None):
             return
-        print('Starting minmax game')
         game.Game.__init__(self, app)
 
-    def update_while_playing(self) -> None:
+    cpdef update_while_playing(self):
         if not self.current_player_chip:
             self.current_player_chip = self.current_player.chip()
             self.chips.add(self.current_player_chip)
@@ -30,3 +32,11 @@ class AIGame(game.Game):
                 self.navigate_to_menu()
         self.status_text = self.current_player.name + ' player\'s turn'
         self.status_color = self.current_player.color
+
+    cdef update_ai_player(self):
+        t1 = time.time()
+        move = self.min_max(self.board, settings.MAX_DEPTH, self.current_player)
+        best_move, highest_move_score = move.column, move.score
+        self.place_chip_ai(best_move)
+        print('ai turn took',  time.time() - t1)
+        print('Move Chosen:', best_move, 'Move Score', highest_move_score)

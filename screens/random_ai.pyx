@@ -1,16 +1,11 @@
-from screens import menu
-from collections import deque
-import objects
 from objects import Player
 import pygame
 import settings
-import utils
-import logging
 import sys
-import objects
 from screens.game import Game
 import copy
 import random
+cimport settings
 
 
 class RandomAI(Game):
@@ -47,26 +42,12 @@ class RandomAI(Game):
         :param board: the current board
         :param depth: the depth of the search
         """
-        # iterate over possible placements
-        possible_moves = {}
-        copied_board = copy.deepcopy(board)
-        for column, value in board.items():
-            child_board = copy.deepcopy(copied_board)
-            chip_row_stop = self.get_free_row(column, board=child_board)
-            # check if there is a free row in the current column
-            if chip_row_stop >= 0:
-                # make a move in the copied board
-                child_board[column][chip_row_stop] = current_player.name
-                possible_moves[column] = self.recursive_search(depth-1, child_board, current_opponent)
-        highest_move_score = -99999999
-        best_move = None
-        moves = list(possible_moves.items())
+        moves = []
+        for col in range(settings.COLS):
+            if self.get_free_row(col, self.board) >= 0:
+                moves.append(col)
         random.shuffle(moves)
-        for move, alpha in moves:
-            if alpha >= highest_move_score:
-                highest_move_score = alpha
-                best_move = move
-        return best_move, highest_move_score
+        return moves[random.randint(0, len(moves)-1)], 0
 
     def recursive_search(self, depth: int, board: dict, player: Player):
         return 0

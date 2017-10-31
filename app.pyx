@@ -3,6 +3,7 @@ from screens import menu
 from networking.online import CFMSClient
 import pygame
 import settings
+cimport settings
 import utils
 import logging
 import os

@@ -1,4 +1,4 @@
-from screens import game
+cimport screens.game as game
 from screens import lobby
 from screens import negamax_ai
 from screens import random_ai
@@ -42,19 +42,19 @@ class Menu:
 
     def btn_host_online_game_click(self, widget):
         logging.info('Host an online game button clicked')
-        self.app.set_current_screen(lobby.Lobby, settings.LOBBY_STATES.HOST_ONLINE_GAME)
+        self.app.set_current_screen(lobby.Lobby, settings.LobbyStates.HOST_ONLINE_GAME)
 
     def btn_join_online_game_click(self, widget):
         logging.info('Join an online game button clicked')
-        self.app.set_current_screen(lobby.Lobby, settings.LOBBY_STATES.JOIN_ONLINE_GAME)
+        self.app.set_current_screen(lobby.Lobby, settings.LobbyStates.JOIN_ONLINE_GAME)
 
     def btn_host_lan_game_click(self, widget):
         logging.info('Host a LAN game button clicked')
-        self.app.set_current_screen(lobby.Lobby, settings.LOBBY_STATES.HOST_LAN_GAME)
+        self.app.set_current_screen(lobby.Lobby, settings.LobbyStates.HOST_LAN_GAME)
 
     def btn_join_lan_game_click(self, widget):
         logging.info('Join a LAN game button clicked')
-        self.app.set_current_screen(lobby.Lobby, settings.LOBBY_STATES.JOIN_LAN_GAME)
+        self.app.set_current_screen(lobby.Lobby, settings.LobbyStates.JOIN_LAN_GAME)
 
     def start_random_ai_game(self, widget):
         logging.info('Starting AI game')
@@ -102,22 +102,23 @@ class Menu:
             text='Play vs an AI (MinMax Algorithm)',
             on_click=self.start_minmax_ai_game
         ))
-
+        """
         self.gui_container.add(self.create_menu_button(
             y=350,
             text='Play vs an AI (Negamax Algorithm)',
             on_click=self.start_negamax_ai_game
         ))
+        """
 
     def draw_title(self):
-        title = self.title_font.render('Connect Four', True, settings.COLORS.BLACK.value)
+        title = self.title_font.render('Connect Four', True, settings.Colors.BLACK.value)
         title_rect = title.get_rect()
         title_rect.centerx = self.app.window.get_rect().centerx
         title_rect.top = 25
 
         self.app.window.blit(title, title_rect)
 
-        version = self.normal_font.render('v' + settings.VERSION, True, settings.COLORS.BLACK.value)
+        version = self.normal_font.render('v' + settings.VERSION, True, settings.Colors.BLACK.value)
         version_rect = version.get_rect()
         version_rect.topright = title_rect.bottomright
 
@@ -148,7 +149,7 @@ class Menu:
 
             gui.event_handler(self.gui_container, event)
 
-        self.app.window.fill(settings.COLORS.WHITE.value)
+        self.app.window.fill(settings.Colors.WHITE.value)
 
         self.draw_title()
         self.draw_footer()
