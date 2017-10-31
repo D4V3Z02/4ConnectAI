@@ -39,7 +39,7 @@
           <LocalVar cname="__pyx_v_8settings_RED_CHIP_IMAGE" lineno="20" name="RED_CHIP_IMAGE" qualified_name="settings.RED_CHIP_IMAGE" type="PythonObject"/>
           <LocalVar cname="__pyx_v_8settings_YELLOW_CHIP_IMAGE" lineno="21" name="YELLOW_CHIP_IMAGE" qualified_name="settings.YELLOW_CHIP_IMAGE" type="PythonObject"/>
           <LocalVar cname="__pyx_v_8settings_GAME_NAME" lineno="22" name="GAME_NAME" qualified_name="settings.GAME_NAME" type="PythonObject"/>
-          <LocalVar cname="__pyx_v_8settings_DEPTH" lineno="23" name="DEPTH" qualified_name="settings.DEPTH" type="CObject"/>
+          <LocalVar cname="__pyx_v_8settings_MAX_DEPTH" lineno="23" name="MAX_DEPTH" qualified_name="settings.MAX_DEPTH" type="CObject"/>
           <LocalVar cname="__pyx_v_8settings_MIDDLE_MULTIPLIER" lineno="24" name="MIDDLE_MULTIPLIER" qualified_name="settings.MIDDLE_MULTIPLIER" type="CObject"/>
           <LocalVar cname="__pyx_v_8settings_CHIP_COUNT_1_MULTIPLIER" lineno="25" name="CHIP_COUNT_1_MULTIPLIER" qualified_name="settings.CHIP_COUNT_1_MULTIPLIER" type="CObject"/>
           <LocalVar cname="__pyx_v_8settings_CHIP_COUNT_2_MULTIPLIER" lineno="26" name="CHIP_COUNT_2_MULTIPLIER" qualified_name="settings.CHIP_COUNT_2_MULTIPLIER" type="CObject"/>
@@ -100,7 +100,7 @@
           <LocalVar cname="__pyx_v_8settings_RED_CHIP_IMAGE" lineno="20" name="RED_CHIP_IMAGE" qualified_name="settings.RED_CHIP_IMAGE" type="PythonObject"/>
           <LocalVar cname="__pyx_v_8settings_YELLOW_CHIP_IMAGE" lineno="21" name="YELLOW_CHIP_IMAGE" qualified_name="settings.YELLOW_CHIP_IMAGE" type="PythonObject"/>
           <LocalVar cname="__pyx_v_8settings_GAME_NAME" lineno="22" name="GAME_NAME" qualified_name="settings.GAME_NAME" type="PythonObject"/>
-          <LocalVar cname="__pyx_v_8settings_DEPTH" lineno="23" name="DEPTH" qualified_name="settings.DEPTH" type="CObject"/>
+          <LocalVar cname="__pyx_v_8settings_MAX_DEPTH" lineno="23" name="MAX_DEPTH" qualified_name="settings.MAX_DEPTH" type="CObject"/>
           <LocalVar cname="__pyx_v_8settings_MIDDLE_MULTIPLIER" lineno="24" name="MIDDLE_MULTIPLIER" qualified_name="settings.MIDDLE_MULTIPLIER" type="CObject"/>
           <LocalVar cname="__pyx_v_8settings_CHIP_COUNT_1_MULTIPLIER" lineno="25" name="CHIP_COUNT_1_MULTIPLIER" qualified_name="settings.CHIP_COUNT_1_MULTIPLIER" type="CObject"/>
           <LocalVar cname="__pyx_v_8settings_CHIP_COUNT_2_MULTIPLIER" lineno="26" name="CHIP_COUNT_2_MULTIPLIER" qualified_name="settings.CHIP_COUNT_2_MULTIPLIER" type="CObject"/>
@@ -159,7 +159,7 @@
       <LocalVar cname="__pyx_v_8settings_RED_CHIP_IMAGE" lineno="20" name="RED_CHIP_IMAGE" qualified_name="settings.RED_CHIP_IMAGE" type="PythonObject"/>
       <LocalVar cname="__pyx_v_8settings_YELLOW_CHIP_IMAGE" lineno="21" name="YELLOW_CHIP_IMAGE" qualified_name="settings.YELLOW_CHIP_IMAGE" type="PythonObject"/>
       <LocalVar cname="__pyx_v_8settings_GAME_NAME" lineno="22" name="GAME_NAME" qualified_name="settings.GAME_NAME" type="PythonObject"/>
-      <LocalVar cname="__pyx_v_8settings_DEPTH" lineno="23" name="DEPTH" qualified_name="settings.DEPTH" type="CObject"/>
+      <LocalVar cname="__pyx_v_8settings_MAX_DEPTH" lineno="23" name="MAX_DEPTH" qualified_name="settings.MAX_DEPTH" type="CObject"/>
       <LocalVar cname="__pyx_v_8settings_MIDDLE_MULTIPLIER" lineno="24" name="MIDDLE_MULTIPLIER" qualified_name="settings.MIDDLE_MULTIPLIER" type="CObject"/>
       <LocalVar cname="__pyx_v_8settings_CHIP_COUNT_1_MULTIPLIER" lineno="25" name="CHIP_COUNT_1_MULTIPLIER" qualified_name="settings.CHIP_COUNT_1_MULTIPLIER" type="CObject"/>
       <LocalVar cname="__pyx_v_8settings_CHIP_COUNT_2_MULTIPLIER" lineno="26" name="CHIP_COUNT_2_MULTIPLIER" qualified_name="settings.CHIP_COUNT_2_MULTIPLIER" type="CObject"/>

@@ -54,7 +54,7 @@ cdef class GameMinmaxAI(ai.AIGame):
                 child_board[column][chip_row_stop] = ai_player.id
                 possible_moves.append(PotentialMove(child_board, column))
         # end recursion if depth is reached or no moves possible
-        if depth == settings.DEPTH or len(possible_moves) == 0 or self.did_someone_win(board, ai_player):
+        if depth == settings.MAX_DEPTH or len(possible_moves) == 0 or self.did_someone_win(board, depth):
             return Move(self.evaluate_board(board, ai_player, depth), current_column)
         cdef Move move = Move(-INF, 0)
         cdef Move min_move
@@ -79,7 +79,7 @@ cdef class GameMinmaxAI(ai.AIGame):
                 child_board[column][chip_row_stop] = self.get_other_player(ai_player).id
                 possible_moves.append(PotentialMove(child_board, column))
         # end recursion if depth is reached or no moves possible
-        if depth == settings.DEPTH or len(possible_moves) == 0 or self.did_someone_win(board, ai_player):
+        if depth == settings.MAX_DEPTH or len(possible_moves) == 0 or self.did_someone_win(board, depth):
             return Move(self.evaluate_board(board, ai_player, depth), current_column)
         cdef Move move = Move(INF, 0)
         cdef Move max_move
@@ -130,10 +130,12 @@ cdef class GameMinmaxAI(ai.AIGame):
                 elif cell == current_player.id and cell == previous_chip:
                     consecutive_chips += 1
                 elif cell != current_player.id:
+                    #print('columns', consecutive_chips)
                     move_score += self.get_move_score(consecutive_chips, x)
                     consecutive_chips = 0
                 previous_chip = cell
             move_score += self.get_move_score(consecutive_chips, x)
+            #print('columns', consecutive_chips)
         return move_score
 
     cdef long evaluate_rows(self, list board, Player current_player):
@@ -150,9 +152,11 @@ cdef class GameMinmaxAI(ai.AIGame):
                 elif cell == current_player.id and cell == previous_chip:
                     consecutive_chips += 1
                 elif cell != current_player.id:
+                    #print('rows', consecutive_chips)
                     move_score += self.get_move_score(consecutive_chips, x)
                     consecutive_chips = 0
                 previous_chip = cell
+            #print('rows', consecutive_chips)
             move_score += self.get_move_score(consecutive_chips, x)
         return move_score
 
@@ -183,19 +187,22 @@ cdef class GameMinmaxAI(ai.AIGame):
         # if other player won
         if depth <= 2 and self.did_player_win(board, self.red_player):
             move_score = -INF + 1
-            print('enemy win', move_score, depth)
-            print(board)
+            #print('enemy win', move_score, depth)
+            #print(board)
         if depth <= 2 and self.did_player_win(board, self.yellow_player):
             move_score = INF - 1
-            print('I win', move_score)
-            print(board)
+            #print('I win', move_score)
+            #print(board)
+        print('move_score', move_score, 'board', board, 'player', current_player)
         return move_score
 
-    cdef bool did_someone_win(self, list board, Player current_player):
-        cdef bool ai_won = self.did_player_win(board, current_player)
-        cdef bool human_player_won = self.did_player_win(board, self.get_other_player(current_player))
+    cdef bool did_someone_win(self, list board, short depth):
+        cdef bool ai_won = self.did_player_win(board, self.yellow_player)
+        cdef bool human_player_won = self.did_player_win(board, self.red_player)
+        #print('ai', ai_won, 'human', human_player_won)
+        print(board, 'ai', ai_won, 'human', human_player_won)
         if ai_won or human_player_won:
-            print('someone won')
+            print('someone won', depth)
             return True
         return False
 
@@ -208,7 +215,6 @@ cdef class GameMinmaxAI(ai.AIGame):
             previous_chip = None
             for y in range(0, settings.ROWS):
                 cell = board[x][y]
-
                 if cell == current_player.id and consecutive_chips == 0:
                     consecutive_chips = 1
                 elif cell == current_player.id and cell == previous_chip:
@@ -231,11 +237,10 @@ cdef class GameMinmaxAI(ai.AIGame):
                 elif cell != current_player.id:
                     consecutive_chips = 0
                 if consecutive_chips >= boarder:
-                    print('ret True')
                     return True
-                print(board)
-                print('cell', cell, 'x, y', x, y)
-                print('cons', consecutive_chips, 'player', current_player.name)
+                #print(board)
+                #print('cell', cell, 'x, y', x, y)
+                #print('cons', consecutive_chips, 'player', current_player.name)
                 previous_chip = cell
         # Check each "/" diagonal starting at the top left corner
         x = 0

@@ -20,7 +20,7 @@ cdef short PLAYER_YELLOW_ID
 cdef str RED_CHIP_IMAGE
 cdef str YELLOW_CHIP_IMAGE
 cdef str GAME_NAME
-cdef short DEPTH
+cdef short MAX_DEPTH
 cdef short MIDDLE_MULTIPLIER
 cdef long CHIP_COUNT_1_MULTIPLIER
 cdef long CHIP_COUNT_2_MULTIPLIER

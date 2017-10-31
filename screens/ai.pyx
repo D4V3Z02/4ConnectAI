@@ -35,7 +35,7 @@ cdef class AIGame(game.Game):
 
     cdef update_ai_player(self):
         t1 = time.time()
-        move = self.min_max(self.board, settings.DEPTH, self.current_player)
+        move = self.min_max(self.board, settings.MAX_DEPTH, self.current_player)
         best_move, highest_move_score = move.column, move.score
         self.place_chip_ai(best_move)
         print('ai turn took',  time.time() - t1)
