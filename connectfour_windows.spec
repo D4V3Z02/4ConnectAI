@@ -3,7 +3,7 @@
 block_cipher = None
 
 
-a = Analysis(['run.py'],
+a = Analysis(['run.py', 'utils.py'],
              pathex=['C:\\Users\\dayvie\\Desktop\\Gits\\4ConnectAI'],
              binaries=[],
              datas=[('resources', 'resources'), ('screens', 'screens')],
