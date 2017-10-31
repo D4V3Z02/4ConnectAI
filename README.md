@@ -1,6 +1,6 @@
 ﻿# AI Connect Four
 
-This is a fork of an existing python-implementation of Connect Four from https://github.com/EpocDotFr/connectfour/issues
+This is a fork of an existing python-implementation of Connect Four from https://github.com/EpocDotFr/connectfour
 
 ## Improvements:
 - Added faster win-condition checking (does not check the whole board after one chip has been played)
