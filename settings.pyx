@@ -49,7 +49,7 @@ class NetworkEngineMode(Enum):
 
 
 # When frozen by PyInstaller, the path to the resources is different
-RESOURCES_ROOT = os.path.join(sys.MEIPASS, 'resources') if getattr(sys, 'frozen', False) else 'resources'
+RESOURCES_ROOT = 'resources' if getattr(sys, 'frozen', False) else 'resources'
 VERSION = '1.2'
 LAN_IDENTIFIER = '51af46a9396f46cdae0eedc4efa9d7a1'
 
