@@ -36,7 +36,7 @@ class RandomAI(Game):
         self.place_chip_ai(best_move)
         print('AI move:', best_move, highest_move_score)
 
-    def evaluate_next_turn(self, board: dict, depth: int, current_player: Player, current_opponent: Player) -> int:
+    def evaluate_next_turn(self, board, depth: int, current_player: Player, current_opponent: Player) -> int:
         """
         Returns the column of the best move
         :param board: the current board
