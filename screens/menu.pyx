@@ -102,12 +102,13 @@ class Menu:
             text='Play vs an AI (MinMax Algorithm)',
             on_click=self.start_minmax_ai_game
         ))
-
+        """
         self.gui_container.add(self.create_menu_button(
             y=350,
             text='Play vs an AI (Negamax Algorithm)',
             on_click=self.start_negamax_ai_game
         ))
+        """
 
     def draw_title(self):
         title = self.title_font.render('Connect Four', True, settings.Colors.BLACK.value)

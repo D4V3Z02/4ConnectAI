@@ -63,8 +63,8 @@ cdef class GameMinmaxAI(ai.AIGame):
                 min_move = self.min_turn(depth + 1, potential_move.board, ai_player, potential_move.column)
             else:
                 min_move = self.min_turn(depth + 1, potential_move.board, ai_player, current_column)
-            if depth == 0:
-                print(min_move, min_move.score, min_move.column)
+            #if depth == 0:
+                #print(min_move, min_move.score, min_move.column)
             if min_move.score > move.score:
                 move = min_move
         return move
@@ -192,11 +192,11 @@ cdef class GameMinmaxAI(ai.AIGame):
         # if other player won
         if depth <= 2 and self.did_player_win(board, self.red_player):
             move_score = -BIG_VALUE + 1
-            print('enemy win', move_score, depth)
+            #print('enemy win', move_score, depth)
             #print(board)
         if depth <= 2 and self.did_player_win(board, self.yellow_player):
             move_score = BIG_VALUE - 1
-            print('I win', move_score)
+            #print('I win', move_score)
             #print(board)
         #print('move_score', move_score, 'board', board, 'player', current_player)
         return move_score
