@@ -55,8 +55,11 @@ LAN_IDENTIFIER = '51af46a9396f46cdae0eedc4efa9d7a1'
 
 cdef short FPS = 30
 cdef short IMAGES_SIDE_SIZE = 80
-cdef short COLS = 7
-cdef short ROWS = 6
+#cdef short COLS = 7
+#cdef short ROWS = 6
+cdef short COLS = 4
+cdef short ROWS = 4
+
 cdef short COLUMN_CHOOSING_MARGIN_TOP = 50
 cdef short BOARD_MARGIN_TOP = IMAGES_SIDE_SIZE + COLUMN_CHOOSING_MARGIN_TOP
 cdef tuple WINDOW_SIZE = (IMAGES_SIDE_SIZE * COLS, (IMAGES_SIDE_SIZE * ROWS) + BOARD_MARGIN_TOP)
@@ -77,7 +80,7 @@ cdef bool EMPTY_SYMBOL = False
 cdef str RED_CHIP_IMAGE = 'red_chip.png'
 cdef str YELLOW_CHIP_IMAGE = 'yellow_chip.png'
 cdef str GAME_NAME = 'AI Connect Four v'
-cdef short DEPTH = 5
+cdef short DEPTH = 2
 cdef short MIDDLE_MULTIPLIER = 2
 cdef long CHIP_COUNT_1_MULTIPLIER = 10
 cdef long CHIP_COUNT_2_MULTIPLIER = 100

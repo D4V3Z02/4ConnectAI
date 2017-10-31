@@ -5,5 +5,6 @@ setup(name="Cythonize4Connect",
     ext_modules=cythonize(["screens/minmax_ai.pyx", "screens/game.pyx",
                            "screens/ai.pyx", "settings.pyx",
                            "objects.pyx", "screens/menu.pyx",
-                           "gui.pyx", "app.pyx"]),
+                           "gui.pyx", "app.pyx",
+                           "screens/random_ai.pyx"], gdb_debug=True),
 )
