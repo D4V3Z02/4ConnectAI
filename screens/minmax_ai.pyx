@@ -61,16 +61,15 @@ cdef class GameMinmaxAI(ai.AIGame):
         for potential_move in potential_moves:
             if depth == 0:
                 min_move = self.min_turn(depth + 1, potential_move.board, ai_player, potential_move.column)
+                self.increaseMoveScoreIfMiddleColumn(min_move)
             else:
                 min_move = self.min_turn(depth + 1, potential_move.board, ai_player, current_column)
-            #if depth == 0:
-                #print(min_move, min_move.score, min_move.column)
             if min_move.score > move.score:
                 move = min_move
         return move
 
     cdef Move increaseMoveScoreIfMiddleColumn(self, Move move):
-        if move.column > 2 or move.column < 4:
+        if move.column > int(settings.COLS/2)-1 and move.column < int(settings.COLS/2)+1:
             move.score = move.score * settings.MIDDLE_MULTIPLIER
         return move
 
