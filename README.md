@@ -8,6 +8,11 @@ This is a fork of an existing python-implementation of Connect Four from https:/
 - Added an AI which uses the MinMax-Algorithm
 - Optimized Python Code with Cython
 
+## TODO:
+
+- enable building of cython executable
+- add minmax with alpha beta pruning
+
 ## Prerequisites
 
 Python 3.6
@@ -15,7 +20,7 @@ Python 3.6
 ## Installation
 
 Clone this repo, and then the usual `pip install -r requirements.txt`.
-Then run `bash cython_linux.sh` or `bash cython_windows.sh` depedendant on your Operating System.
+Then run `bash cython_linux.sh` or `bash cython_windows.sh` dependant on your Operating System.
 
 ## Usage
 
