@@ -1,5 +1,4 @@
 from screens import menu
-from screens import ai
 from collections import deque
 import objects
 from objects import Player
@@ -9,7 +8,7 @@ import utils
 import logging
 import sys
 import objects
-from screens.game import Game
+import screens.ai as ai
 import copy
 import random
 import time
@@ -22,6 +21,7 @@ class GameNegamaxAI(ai.AIGame):
     def __init__(self, app):
         if (app is None):
             return
+        print('Starting negamax game')
         Game.__init__(self, app)
 
     def update_ai_player(self) -> None:

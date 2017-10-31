@@ -1,14 +1,17 @@
-from screens import menu
+import screens.menu as menu
 from collections import deque
 import objects
 import pygame
 import settings
+cimport settings
 import utils
 import logging
 import sys
+from cpython cimport bool
 
 
-class Game:
+cdef class Game:
+
     def __init__(self, app):
         logging.info('Initializing game')
         self.app = app
@@ -17,14 +20,14 @@ class Game:
         self.current_player = None
         self.current_opponent = None
         self.status_text = ""
-        self.status_color = settings.COLORS.WHITE.value
+        self.status_color = settings.Colors.WHITE.value
         self.button_mapping_while_playing = {pygame.K_LEFT: self.move_chip_left,
                                              pygame.K_RIGHT: self.move_chip_right,
                                              pygame.K_DOWN: self.place_chip,
                                              pygame.K_ESCAPE: self.navigate_to_menu}
-        self.state_mapping = {settings.GAME_STATES.PLAYING: self.update_while_playing,
-                              settings.GAME_STATES.WON: self.update_while_won,
-                              settings.GAME_STATES.NO_ONE_WIN: self.update_while_draw}
+        self.state_mapping = {settings.GameStates.PLAYING: self.update_while_playing,
+                              settings.GameStates.WON: self.update_while_won,
+                              settings.GameStates.NO_ONE_WIN: self.update_while_draw}
         self.chips = pygame.sprite.Group()
         self.current_consecutive_chips = deque(maxlen=4)
         self.red_player = objects.RedPlayer()
@@ -46,51 +49,51 @@ class Game:
         self.normal_font = utils.load_font('monofur.ttf', 16)
         self.init_new_game()
 
-    def init_new_game(self):
+    cdef init_new_game(self):
         logging.info('Starting new game')
-        self.state = settings.GAME_STATES.PLAYING
+        self.state = settings.GameStates.PLAYING
         self.chips.empty()
         self.current_consecutive_chips.clear()
         self.current_player = self.red_player # The starting player is always the red one
         self.current_opponent = self.yellow_player
         self.current_player_chip = None
         self.current_player_chip_column = 0
-        self.board = {}
-        self.highlighted_chips = {}
+        self.board = []
+        self.highlighted_chips = []
         for x in range(0, settings.COLS):
-            self.board[x] = {}
-            self.highlighted_chips[x] = {}
+            self.board.append([])
+            self.highlighted_chips.append([])
             for y in range(0, settings.ROWS):
-                self.board[x][y] = None
-                self.highlighted_chips[x][y] = None
+                self.board[x].insert(y, settings.EMPTY_SYMBOL)
+                self.highlighted_chips[x].insert(y, settings.EMPTY_SYMBOL)
         logging.info('Loading random music')
         utils.load_random_music(['techno_dreaming.wav', 'techno_celebration.wav', 'electric_rain.wav', 'snake_trance.wav'], volume=self.musics_volume)
 
-    def execute_update_dependant_on_state(self):
+    cdef execute_update_dependant_on_state(self):
         self.state_mapping[self.state]()
 
-    def execute_operation_while_playing(self, pygame_button):
+    cpdef execute_operation_while_playing(self, pygame_button):
         if self.current_player_chip:
             try:
                 self.button_mapping_while_playing[pygame_button]()
             except KeyError:
                 return
 
-    def is_valid_position(self, x, y) -> bool:
+    cpdef bool is_valid_position(self, int x, int y):
         if x < 0 or x > settings.COLS - 1 or y < 0 or y > settings.ROWS - 1:
             return False
         return True
 
-    def set_highlighted_chips(self):
+    cdef set_highlighted_chips(self):
         for chips_position in list(self.current_consecutive_chips):
             self.highlighted_chips[chips_position[0]][chips_position[1]] = True
 
-    def clear_consecutive_chips_if_false(self, condition: bool) -> bool:
+    cdef public bool clear_consecutive_chips_if_false(self, bool condition):
         if not condition:
             self.current_consecutive_chips.clear()
         return condition
 
-    def check_horizontal_win(self) -> bool:
+    cdef check_horizontal_win(self):
         self.current_consecutive_chips.append(self.last_chip_pos)
         chip_x, chip_y = self.last_chip_pos
         space_right = settings.COLS - chip_x - 1
@@ -98,7 +101,7 @@ class Game:
         # check right chips
         if space_right:
             for x in range(chip_x + 1, chip_x + space_right + 1):
-                if self.board[x][chip_y] == self.current_player.name:
+                if self.board[x][chip_y] == self.current_player.id:
                     chip_count += 1
                     self.current_consecutive_chips.append((x, chip_y))
                 else:
@@ -106,27 +109,27 @@ class Game:
         # check left chips
         if chip_x:
             for x in range(chip_x - 1, -1, -1):
-                if self.board[x][chip_y] == self.current_player.name:
+                if self.board[x][chip_y] == self.current_player.id:
                     chip_count += 1
                     self.current_consecutive_chips.append((x, chip_y))
                 else:
                     break
         return self.clear_consecutive_chips_if_false(chip_count >= 4)
 
-    def check_vertical_win(self) -> bool:
+    cdef bool check_vertical_win(self):
         self.current_consecutive_chips.append(self.last_chip_pos)
         chip_x, chip_y = self.last_chip_pos
         chip_count = 1
         # check chips from the top to bottom
         for y in range(chip_y + 1, settings.ROWS):
-            if self.board[chip_x][y] == self.current_player.name:
+            if self.board[chip_x][y] == self.current_player.id:
                 self.current_consecutive_chips.append((chip_x, y))
                 chip_count += 1
             else:
                 break
         return self.clear_consecutive_chips_if_false(chip_count >= 4)
 
-    def check_diagonal_left_to_right(self) -> bool:
+    cdef bool check_diagonal_left_to_right(self):
         self.current_consecutive_chips.append(self.last_chip_pos)
         # check the chips which are "over" the current chip
         chip_x, chip_y = self.last_chip_pos
@@ -134,7 +137,7 @@ class Game:
         x = chip_x + 1
         y = chip_y - 1
         while self.is_valid_position(x, y):
-            if self.board[x][y] == self.current_player.name:
+            if self.board[x][y] == self.current_player.id:
                 chip_count += 1
                 self.current_consecutive_chips.append((x, y))
                 x += 1
@@ -145,7 +148,7 @@ class Game:
         x = chip_x - 1
         y = chip_y + 1
         while self.is_valid_position(x, y):
-            if self.board[x][y] == self.current_player.name:
+            if self.board[x][y] == self.current_player.id:
                 chip_count += 1
                 self.current_consecutive_chips.append((x, y))
                 x -= 1
@@ -154,7 +157,7 @@ class Game:
                 break
         return self.clear_consecutive_chips_if_false(chip_count >= 4)
 
-    def check_diagonal_right_to_left(self) -> bool:
+    cdef bool check_diagonal_right_to_left(self):
         self.current_consecutive_chips.append(self.last_chip_pos)
         # check the chips which are "under" the current chip
         chip_x, chip_y = self.last_chip_pos
@@ -163,7 +166,7 @@ class Game:
         x = chip_x - 1
         y = chip_y - 1
         while self.is_valid_position(x, y):
-            if self.board[x][y] == self.current_player.name:
+            if self.board[x][y] == self.current_player.id:
                 chip_count += 1
                 self.current_consecutive_chips.append((x, y))
                 x -= 1
@@ -173,7 +176,7 @@ class Game:
         x = chip_x + 1
         y = chip_y + 1
         while self.is_valid_position(x, y):
-            if self.board[x][y] == self.current_player.name:
+            if self.board[x][y] == self.current_player.id:
                 chip_count += 1
                 self.current_consecutive_chips.append((x, y))
                 x += 1
@@ -182,7 +185,7 @@ class Game:
                 break
         return self.clear_consecutive_chips_if_false(chip_count >= 4)
 
-    def has_current_player_won(self) -> bool:
+    cdef bool has_current_player_won(self):
         """
         Checks if the current player wins the game.
         This method performs the checks on the whole board in all possible
@@ -192,7 +195,7 @@ class Game:
         return self.check_horizontal_win() or self.check_vertical_win() or \
             self.check_diagonal_left_to_right() or self.check_diagonal_right_to_left()
 
-    def did_no_one_win(self) -> bool:
+    cdef bool did_no_one_win(self):
         """Check if no one win the game.
         This method checks every single cell. If all are filled, no one win."""
         for x in range(0, settings.COLS):
@@ -201,7 +204,7 @@ class Game:
                     return False
         return True
 
-    def draw_board(self):
+    cdef draw_board(self):
         """Draw the board itself (the game support)."""
         for x in range(0, settings.COLS):
             for y in range(0, settings.ROWS):
@@ -212,26 +215,26 @@ class Game:
 
                 self.app.window.blit(image, (x * settings.IMAGES_SIDE_SIZE, y * settings.IMAGES_SIDE_SIZE + settings.BOARD_MARGIN_TOP))
 
-    def get_free_row(self, column: int, board=None) -> int:
+    cpdef int get_free_row(self, int column, board):
         """Given a column, get the latest row number which is free."""
-        if board is None:
-            board = self.board
-        for y, cell in board[column].items():
+        column_list = board[column]
+        cdef int y = 0
+        for y in range(len(column_list)):
             # If there's nothing in the current cell
-            if not cell:
+            if column_list[y] == settings.EMPTY_SYMBOL:
                 # If we're in the latest cell or if the next cell isn't empty
-                if (y == settings.ROWS - 1) or (not y + 1 > settings.ROWS - 1 and board[column][y + 1]):
+                if (y == settings.ROWS - 1) or (not y + 1 > settings.ROWS - 1 and column_list[y + 1]):
                     return y
         return -1
 
-    def draw_background(self) -> None:
-        self.app.window.fill(settings.COLORS.BLACK.value)
+    cdef draw_background(self):
+        self.app.window.fill(settings.Colors.BLACK.value)
         blue_rect_1 = pygame.Rect((0, 0), (settings.WINDOW_SIZE[0], settings.COLUMN_CHOOSING_MARGIN_TOP - 1))
         blue_rect_2 = pygame.Rect((0, settings.COLUMN_CHOOSING_MARGIN_TOP), (settings.WINDOW_SIZE[0], settings.IMAGES_SIDE_SIZE))
-        self.app.window.fill(settings.COLORS.BLUE.value, blue_rect_1)
-        self.app.window.fill(settings.COLORS.BLUE.value, blue_rect_2)
+        self.app.window.fill(settings.Colors.BLUE.value, blue_rect_1)
+        self.app.window.fill(settings.Colors.BLUE.value, blue_rect_2)
 
-    def draw_header(self, status_text, status_color) -> None:
+    cdef draw_header(self, status_text, status_color):
         # Status
         status = self.title_font.render(status_text, True, status_color)
         status_rect = status.get_rect()
@@ -239,37 +242,37 @@ class Game:
         status_rect.centery = 25
         self.app.window.blit(status, status_rect)
         # Game name
-        game_name = self.normal_font.render(settings.GAME_NAME + settings.VERSION, True, settings.COLORS.WHITE.value)
+        game_name = self.normal_font.render(settings.GAME_NAME + settings.VERSION, True, settings.Colors.WHITE.value)
         game_name_rect = game_name.get_rect()
         game_name_rect.centery = 25
         game_name_rect.right = self.app.window.get_rect().width - 10
         self.app.window.blit(game_name, game_name_rect)
         # Scores
-        pygame.draw.line(self.app.window, settings.COLORS.BLACK.value, (game_name_rect.left - 15, 0), (game_name_rect.left - 15, settings.COLUMN_CHOOSING_MARGIN_TOP - 1))
-        scores_yellow = self.title_font.render(str(self.yellow_player.score), True, settings.COLORS.YELLOW.value)
+        pygame.draw.line(self.app.window, settings.Colors.BLACK.value, (game_name_rect.left - 15, 0), (game_name_rect.left - 15, settings.COLUMN_CHOOSING_MARGIN_TOP - 1))
+        scores_yellow = self.title_font.render(str(self.yellow_player.score), True, settings.Colors.YELLOW.value)
         scores_yellow_rect = scores_yellow.get_rect()
         scores_yellow_rect.centery = 25
         scores_yellow_rect.right = game_name_rect.left - 25
         self.app.window.blit(scores_yellow, scores_yellow_rect)
-        dash = self.title_font.render('-', True, settings.COLORS.WHITE.value)
+        dash = self.title_font.render('-', True, settings.Colors.WHITE.value)
         dash_rect = dash.get_rect()
         dash_rect.centery = 25
         dash_rect.right = scores_yellow_rect.left - 5
         self.app.window.blit(dash, dash_rect)
-        scores_red = self.title_font.render(str(self.red_player.score), True, settings.COLORS.RED.value)
+        scores_red = self.title_font.render(str(self.red_player.score), True, settings.Colors.RED.value)
         scores_red_rect = scores_red.get_rect()
         scores_red_rect.centery = 25
         scores_red_rect.right = dash_rect.left - 5
         self.app.window.blit(scores_red, scores_red_rect)
-        pygame.draw.line(self.app.window, settings.COLORS.BLACK.value, (scores_red_rect.left - 15, 0), (scores_red_rect.left - 15, settings.COLUMN_CHOOSING_MARGIN_TOP - 1))
+        pygame.draw.line(self.app.window, settings.Colors.BLACK.value, (scores_red_rect.left - 15, 0), (scores_red_rect.left - 15, settings.COLUMN_CHOOSING_MARGIN_TOP - 1))
 
-    def place_chip(self) -> None:
-        chip_row_stop = self.get_free_row(self.current_player_chip_column)
+    cpdef place_chip(self):
+        chip_row_stop = self.get_free_row(self.current_player_chip_column, self.board)
         if chip_row_stop >= 0:  # Actually move the chip in the current column and reset the current one (to create a new one later)
             if self.placed_sound:
                 self.placed_sound.play()
             self.last_chip_pos = (self.current_player_chip_column, chip_row_stop)
-            self.board[self.current_player_chip_column][chip_row_stop] = self.current_player.name
+            self.board[self.current_player_chip_column][chip_row_stop] = self.current_player.id
             self.current_player_chip.rect.top += settings.IMAGES_SIDE_SIZE * (chip_row_stop + 1)
             if self.has_current_player_won():
                 self.set_highlighted_chips()
@@ -278,15 +281,14 @@ class Game:
                     self.win_sound.play()
                 if self.applause_sound:
                     self.applause_sound.play()
-                self.state = settings.GAME_STATES.WON
-                pygame.time.set_timer(settings.EVENTS.WINNER_CHIPS_EVENT.value, 600)
-                logging.info(self.current_player.name + ' win')
+                self.state = settings.GameStates.WON
+                pygame.time.set_timer(settings.Events.WINNER_CHIPS_EVENT.value, 600)
                 self.current_player.score += 1
             elif self.did_no_one_win():
                 pygame.mixer.music.stop()
                 if self.boo_sound:
                     self.boo_sound.play()
-                self.state = settings.GAME_STATES.NO_ONE_WIN
+                self.state = settings.GameStates.NO_ONE_WIN
                 logging.info('No one won')
             else:  # It's the other player's turn if the current player didn't win
                 if self.current_player == self.yellow_player:
@@ -302,7 +304,7 @@ class Game:
                 self.column_full_sound.play()
             logging.info('{} column full'.format(self.current_player_chip_column))
 
-    def move_chip_left(self) -> None:
+    cpdef move_chip_left(self):
         if self.column_change_sound:
             self.column_change_sound.play()
         if self.current_player_chip.rect.left - settings.IMAGES_SIDE_SIZE >= 0:  # The chip will not go beyond the screen
@@ -312,7 +314,7 @@ class Game:
             self.current_player_chip.rect.right = settings.WINDOW_SIZE[0]
             self.current_player_chip_column = settings.COLS - 1
 
-    def move_chip_right(self) -> None:
+    cpdef move_chip_right(self):
         if self.column_change_sound:
             self.column_change_sound.play()
         if self.current_player_chip.rect.right + settings.IMAGES_SIDE_SIZE <= settings.WINDOW_SIZE[
@@ -323,10 +325,10 @@ class Game:
             self.current_player_chip.rect.left = 0
             self.current_player_chip_column = 0
 
-    def navigate_to_menu(self) -> None:
+    cpdef navigate_to_menu(self):
         self.app.set_current_screen(menu.Menu, True)
 
-    def update_while_playing(self) -> None:
+    cpdef update_while_playing(self):
         if not self.current_player_chip:
             self.current_player_chip = self.current_player.chip()
             self.chips.add(self.current_player_chip)
@@ -341,25 +343,25 @@ class Game:
         self.status_text = self.current_player.name + ' player\'s turn'
         self.status_color = self.current_player.color
 
-    def update_while_won(self) -> None:
+    cpdef update_while_won(self):
         for event in pygame.event.get():
             self.check_for_quitting(event)
-            if event.type == settings.EVENTS.WINNER_CHIPS_EVENT.value:
+            if event.type == settings.Events.WINNER_CHIPS_EVENT.value:
                 for x in range(0, settings.COLS):
                     for y in range(0, settings.ROWS):
                         if isinstance(self.highlighted_chips[x][y], bool):
                             self.highlighted_chips[x][y] = not self.highlighted_chips[x][y]
-                pygame.time.set_timer(settings.EVENTS.WINNER_CHIPS_EVENT.value, 600)
+                pygame.time.set_timer(settings.Events.WINNER_CHIPS_EVENT.value, 600)
         self.status_text = self.current_player.name + ' player wins!'
         self.status_color = self.current_player.color
 
-    def update_while_draw(self)-> None:
+    cpdef update_while_draw(self):
         for event in pygame.event.get():
            self.check_for_quitting(event)
         self.status_text = 'DRAW'
-        self.status_color = settings.COLORS.WHITE.value
+        self.status_color = settings.Colors.WHITE.value
 
-    def check_for_quitting(self, pygame_event) -> None:
+    cdef check_for_quitting(self, pygame_event):
         if pygame_event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
@@ -369,7 +371,7 @@ class Game:
             elif pygame_event.key == pygame.K_RETURN:  # Pressing the Return key will start a new game
                 self.init_new_game()
 
-    def update(self) -> None:
+    cpdef update(self):
         self.draw_background()
         self.execute_update_dependant_on_state()
         self.draw_header(self.status_text, self.status_color)
