@@ -8,7 +8,7 @@ import screens.ai as ai
 from cpython cimport bool
 
 
-BIG_VALUE = 999999999
+cdef long BIG_VALUE = settings.BIG_VALUE
 
 
 cdef class GameMinmaxAI(ai.AIGame):
