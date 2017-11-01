@@ -1,8 +1,5 @@
 from app import App
 import pygame
-import autobahn
-import autobahn.asyncio
-import requests
 import utils
 import logging
 import sys

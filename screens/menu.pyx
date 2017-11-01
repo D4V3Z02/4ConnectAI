@@ -1,5 +1,5 @@
 cimport screens.game as game
-from screens import lobby
+#from screens import lobby
 from screens import negamax_ai
 from screens import random_ai
 from screens import minmax_ai
@@ -40,6 +40,7 @@ class Menu:
         logging.info('Offline game button clicked')
         self.app.set_current_screen(game.Game)
 
+    """
     def btn_host_online_game_click(self, widget):
         logging.info('Host an online game button clicked')
         self.app.set_current_screen(lobby.Lobby, settings.LobbyStates.HOST_ONLINE_GAME)
@@ -55,6 +56,7 @@ class Menu:
     def btn_join_lan_game_click(self, widget):
         logging.info('Join a LAN game button clicked')
         self.app.set_current_screen(lobby.Lobby, settings.LobbyStates.JOIN_LAN_GAME)
+    """
 
     def start_random_ai_game(self, widget):
         logging.info('Starting AI game')
