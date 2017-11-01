@@ -1,17 +1,8 @@
-import screens.menu as menu
-from collections import deque
 from objects import Player
 from objects cimport Player
 import settings
 cimport settings
-import utils
-import logging
-import sys
-import objects
-cimport objects
 from screens.game import Game
-import copy
-import random
 cimport screens.ai as ai
 import screens.ai as ai
 from cpython cimport bool
@@ -29,16 +20,9 @@ cdef class GameMinmaxAI(ai.AIGame):
 
     cpdef Move min_max(self, list board, int depth, Player ai_player):
         """
-        Returns the column of the best move
-        :param board: the current board
-        :param depth: the depth of the search
+        Returns the best move found by the minmax algorithm
         """
-        # iterate over possible placements
-        cdef dict possible_moves = {}
-        cdef list copied_board, child_board
-        cdef long move_score = 0
-        copied_board = self.copy_board(board)
-        return self.max_turn(0, copied_board, ai_player, -1)
+        return self.max_turn(0, self.copy_board(board), ai_player, -1)
 
     cdef list copy_board(self, list board):
         return [x[:] for x in board]
