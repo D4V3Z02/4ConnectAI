@@ -64,7 +64,7 @@ cdef class GameMinmaxAI(ai.AIGame):
             chip_row_stop = self.get_free_row(column, board=board)
             if chip_row_stop >= 0:
                 child_board = self.copy_board(board)
-                child_board[column][chip_row_stop] = self.get_other_player(ai_player).id
+                child_board[column][chip_row_stop] = self.red_player.id
                 potential_moves.append(PotentialMove(child_board, column))
         # end recursion if depth is reached or no moves possible
         if depth == settings.MAX_DEPTH or len(potential_moves) == 0 or self.did_someone_win(board, depth):
@@ -76,12 +76,6 @@ cdef class GameMinmaxAI(ai.AIGame):
             if max_move.score < move.score:
                 move = max_move
         return move
-
-    def get_other_player(self, player: Player):
-        if player.id == self.current_player.id:
-            return self.current_opponent
-        else:
-            return self.current_player
 
     cpdef void place_chip_ai(self, int column):
         cdef i = 0
