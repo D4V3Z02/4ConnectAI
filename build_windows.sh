@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 bash cython_windows.sh
 pyinstaller --clean --noconfirm --debug --log-level=WARN --name="connectfour_windows" \
  --icon="resources/images/icon.ico" --add-data="resources;resources" \
