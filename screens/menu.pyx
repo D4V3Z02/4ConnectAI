@@ -22,7 +22,7 @@ class Menu:
         self.normal_font = utils.load_font('monofur.ttf', 18)
         self.small_font = utils.load_font('monofur.ttf', 15)
         self.musics_volume = self.app.config.getfloat('connectfour', 'music_volume')
-        if (not pygame.mixer.music.get_busy() or force_music) and settings.PLAY_MUSIC:
+        if not pygame.mixer.music.get_busy() or force_music:
             utils.load_music('menu.wav', volume=self.musics_volume)
         self.load_gui()
 

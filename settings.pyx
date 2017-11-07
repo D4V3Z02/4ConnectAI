@@ -53,7 +53,6 @@ RESOURCES_ROOT = 'resources' if getattr(sys, 'frozen', False) else 'resources'
 VERSION = '1.2'
 LAN_IDENTIFIER = '51af46a9396f46cdae0eedc4efa9d7a1'
 
-cdef bool PLAY_MUSIC = False
 cdef short FPS = 30
 cdef short IMAGES_SIDE_SIZE = 80
 cdef short COLS = 7

@@ -67,9 +67,7 @@ cdef class Game:
                 self.board[x].insert(y, settings.EMPTY_SYMBOL)
                 self.highlighted_chips[x].insert(y, settings.EMPTY_SYMBOL)
         logging.info('Loading random music')
-        #utils.load_random_music(['techno_dreaming.wav', 'techno_celebration.wav', 'electric_rain.wav', 'snake_trance.wav'], volume=self.musics_volume)
-        if settings.PLAY_MUSIC:
-            utils.load_random_music(['scrum_mix.ogg', 'scrum_ost.ogg'], volume=self.musics_volume)
+        utils.load_random_music(['techno_dreaming.wav', 'techno_celebration.wav', 'electric_rain.wav', 'snake_trance.wav', 'scrum_mix.ogg'], volume=self.musics_volume)
 
     cdef execute_update_dependant_on_state(self):
         self.state_mapping[self.state]()
