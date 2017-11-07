@@ -1,6 +1,2 @@
-#!/usr/bin/env bash
 bash cython_windows.sh
-pyinstaller --noconfirm --debug --log-level=WARN --name="connectfour_windows" --icon="resources/images/icon.ico" connectfour_windows.spec
-cp *.pyd ./dist/connectfour_windows
-#mkdir ./dist/connectfour_windows/networking
-#cp networking/*.py ./dist/connectfour_windows/networking
+pyinstaller --clean --noconfirm --debug --log-level=WARN --name="connectfour_windows" --icon="resources/images/icon.ico" --add-data="resources;resources" --add-data=".;." --add-data="screens;screens" run.py
