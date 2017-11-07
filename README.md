@@ -10,7 +10,6 @@ This is a fork of an existing python-implementation of Connect Four from https:/
 
 ## TODO:
 
-- enable building of cython executable
 - add minmax with alpha beta pruning
 
 ## Prerequisites
