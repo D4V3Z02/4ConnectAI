@@ -6,6 +6,7 @@ from screens import minmax_ai
 import pygame
 import logging
 import settings
+cimport settings
 import gui
 import utils
 import sys
@@ -21,7 +22,7 @@ class Menu:
         self.normal_font = utils.load_font('monofur.ttf', 18)
         self.small_font = utils.load_font('monofur.ttf', 15)
         self.musics_volume = self.app.config.getfloat('connectfour', 'music_volume')
-        if not pygame.mixer.music.get_busy() or force_music:
+        if (not pygame.mixer.music.get_busy() or force_music) and settings.PLAY_MUSIC:
             utils.load_music('menu.wav', volume=self.musics_volume)
         self.load_gui()
 
