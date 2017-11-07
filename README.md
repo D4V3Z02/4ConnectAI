@@ -10,7 +10,7 @@ This is a fork of an existing python-implementation of Connect Four from https:/
 
 ## TODO:
 
-- add minmax with alpha beta pruning
+- add alpha beta pruning to minmax
 
 ## Prerequisites
 
