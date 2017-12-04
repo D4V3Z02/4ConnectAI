@@ -16,12 +16,12 @@ cdef class AlphaBetaAI(minmax.GameMinmaxAI):
     def __init__(self, app):
         if (app is None):
             return
-        print('Starting minmax game')
+        print('Starting alpha_beta game')
         Game.__init__(self, app)
 
     cpdef Move min_max(self, list board, int depth, Player ai_player):
         """
-        Returns the best move found by the minmax algorithm
+        Returns the best move found by the alpha_beta algorithm
         """
         return self.max_turn_ab(0, self.copy_board(board), ai_player, -1, -BIG_VALUE, +BIG_VALUE)
 
