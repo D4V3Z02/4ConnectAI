@@ -82,6 +82,7 @@ cdef str YELLOW_CHIP_IMAGE = 'yellow_chip.png'
 cdef str GAME_NAME = 'AI Connect Four v'
 #cdef short MAX_DEPTH = 3
 cdef short MAX_DEPTH = 5
+cdef short MAX_DEPTH_AB = 20
 cdef short MIDDLE_MULTIPLIER = 2
 cdef long CHIP_COUNT_1_MULTIPLIER = 10
 cdef long CHIP_COUNT_2_MULTIPLIER = 100

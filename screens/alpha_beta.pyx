@@ -36,7 +36,7 @@ cdef class AlphaBetaAI(minmax.GameMinmaxAI):
                 child_board[column][chip_row_stop] = ai_player.id
                 potential_moves.append(PotentialMove(child_board, column))
         # end recursion if depth is reached or no moves possible
-        if depth == settings.MAX_DEPTH or len(potential_moves) == 0 or self.did_someone_win(board, depth):
+        if depth == settings.MAX_DEPTH_AB or len(potential_moves) == 0 or self.did_someone_win(board, depth):
             return Move(self.evaluate_board(board, ai_player, depth), current_column)
         cdef Move move = Move(alpha, 0)
         cdef Move min_move
@@ -62,7 +62,7 @@ cdef class AlphaBetaAI(minmax.GameMinmaxAI):
                 child_board[column][chip_row_stop] = self.red_player.id
                 potential_moves.append(PotentialMove(child_board, column))
         # end recursion if depth is reached or no moves possible
-        if depth == settings.MAX_DEPTH or len(potential_moves) == 0 or self.did_someone_win(board, depth):
+        if depth == settings.MAX_DEPTH_AB or len(potential_moves) == 0 or self.did_someone_win(board, depth):
             return Move(self.evaluate_board(board, ai_player, depth), current_column)
         cdef Move move = Move(beta, 0)
         cdef Move max_move
