@@ -3,6 +3,7 @@ cimport screens.game as game
 from screens import negamax_ai
 from screens import random_ai
 from screens import minmax_ai
+from screens import alpha_beta
 import pygame
 import logging
 import settings
@@ -60,16 +61,20 @@ class Menu:
     """
 
     def start_random_ai_game(self, widget):
-        logging.info('Starting AI game')
+        logging.info('Starting Random AI game')
         self.app.set_current_screen(random_ai.RandomAI)
 
     def start_minmax_ai_game(self, widget):
-        logging.info('Starting AI game')
+        logging.info('Starting Minmax AI game')
         self.app.set_current_screen(minmax_ai.GameMinmaxAI)
 
     def start_negamax_ai_game(self, widget):
         logging.info('Starting AI game')
         self.app.set_current_screen(negamax_ai.GameNegamaxAI)
+
+    def start_alpha_beta_ai_game(self, widget):
+        logging.info('Starting AlphaBeta AI game')
+        self.app.set_current_screen(alpha_beta.AlphaBetaAI)
 
     def btn_quit_click(self, widget):
         pygame.quit()
@@ -104,6 +109,12 @@ class Menu:
             y=280,
             text='Play vs an AI (MinMax Algorithm)',
             on_click=self.start_minmax_ai_game
+        ))
+
+        self.gui_container.add(self.create_menu_button(
+            y=350,
+            text='Play vs an AI (AlphaBeta Algorithm)',
+            on_click=self.start_alpha_beta_ai_game
         ))
         """
         self.gui_container.add(self.create_menu_button(
