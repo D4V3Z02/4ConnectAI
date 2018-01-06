@@ -16,3 +16,4 @@ find . -name \*.so -exec cp {} ./dist/connectfour_linux \;
 mkdir ./dist/connectfour_linux/screens
 find ./screens -name \*.so -exec cp {} ./dist/connectfour_linux/screens \;
 find ./screens -name \*.py -exec cp {} ./dist/connectfour_linux/screens \;
+cp **.py ./dist/connectfour_linux/
