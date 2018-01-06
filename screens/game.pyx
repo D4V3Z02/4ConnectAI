@@ -67,7 +67,7 @@ cdef class Game:
                 self.board[x].insert(y, settings.EMPTY_SYMBOL)
                 self.highlighted_chips[x].insert(y, settings.EMPTY_SYMBOL)
         logging.info('Loading random music')
-        utils.load_random_music(['techno_dreaming.wav', 'techno_celebration.wav', 'electric_rain.wav', 'snake_trance.wav', 'scrum_mix.ogg'], volume=self.musics_volume)
+        utils.load_random_music(settings.MUSIC_LIST, volume=self.musics_volume)
 
     cdef execute_update_dependant_on_state(self):
         self.state_mapping[self.state]()
@@ -234,18 +234,8 @@ cdef class Game:
         self.app.window.fill(settings.Colors.BLUE.value, blue_rect_2)
 
     cdef draw_header(self, status_text, status_color):
-        # Status
-        status = self.title_font.render(status_text, True, status_color)
-        status_rect = status.get_rect()
-        status_rect.x = 10
-        status_rect.centery = 25
-        self.app.window.blit(status, status_rect)
-        # Game name
-        game_name = self.normal_font.render(settings.GAME_NAME + settings.VERSION, True, settings.Colors.WHITE.value)
-        game_name_rect = game_name.get_rect()
-        game_name_rect.centery = 25
-        game_name_rect.right = self.app.window.get_rect().width - 10
-        self.app.window.blit(game_name, game_name_rect)
+        self.draw_status(status_text, status_color)
+        game_name_rect = self.draw_right_header_rect()
         # Scores
         pygame.draw.line(self.app.window, settings.Colors.BLACK.value, (game_name_rect.left - 15, 0), (game_name_rect.left - 15, settings.COLUMN_CHOOSING_MARGIN_TOP - 1))
         scores_yellow = self.title_font.render(str(self.yellow_player.score), True, settings.Colors.YELLOW.value)
@@ -264,6 +254,24 @@ cdef class Game:
         scores_red_rect.right = dash_rect.left - 5
         self.app.window.blit(scores_red, scores_red_rect)
         pygame.draw.line(self.app.window, settings.Colors.BLACK.value, (scores_red_rect.left - 15, 0), (scores_red_rect.left - 15, settings.COLUMN_CHOOSING_MARGIN_TOP - 1))
+
+    cdef draw_status(self, str status_text, status_color):
+        status = self.title_font.render(status_text, True, status_color)
+        status_rect = status.get_rect()
+        status_rect.x = 10
+        status_rect.centery = 25
+        self.app.window.blit(status, status_rect)
+
+    cdef object generate_right_header_text(self):
+        return self.normal_font.render(settings.GAME_NAME + settings.VERSION, True, settings.Colors.WHITE.value)
+
+    cdef draw_right_header_rect(self):
+        game_name = self.generate_right_header_text()
+        game_name_rect = game_name.get_rect()
+        game_name_rect.centery = 25
+        game_name_rect.right = self.app.window.get_rect().width - 10
+        self.app.window.blit(game_name, game_name_rect)
+        return game_name_rect
 
     cpdef place_chip(self):
         chip_row_stop = self.get_free_row(self.current_player_chip_column, self.board)

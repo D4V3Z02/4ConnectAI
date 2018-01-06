@@ -82,7 +82,7 @@ class TestStringMethods(unittest.TestCase):
                  [None, None, None, None, None, None],
                  [None, None, None, None, None, None]]
         # chips in the middle (index 2 - 4) give quadruple score
-        self.assertTrue(ai_game.evaluate_board(board=board, current_player=yellow) >= settings.CHIP_COUNT_4_MULTIPLIER)
+        self.assertTrue(ai_game.evaluate_board(board=board, ai_player=yellow) >= settings.CHIP_COUNT_4_MULTIPLIER)
 
         board = [[None, None, None, None, yellow_name, None],
                  [None, None, None, yellow_name, None, None],
@@ -93,7 +93,7 @@ class TestStringMethods(unittest.TestCase):
                  [None, None, None, None, None, None]]
         # chips in the middle (index 2 - 4) give quadruple score
         self.assertTrue(ai_game.evaluate_board(board=board,
-                                               current_player=yellow) >= settings.CHIP_COUNT_4_MULTIPLIER)
+                                               ai_player=yellow) >= settings.CHIP_COUNT_4_MULTIPLIER)
 
     def test_end_conidition(self):
         ai_game = GameMinmaxAI(None)

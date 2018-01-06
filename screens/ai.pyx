@@ -40,3 +40,6 @@ cdef class AIGame(game.Game):
         self.place_chip_ai(best_move)
         print('ai turn took',  time.time() - t1)
         print('Move Chosen:', best_move, 'Move Score', highest_move_score)
+
+    cdef object generate_right_header_text(self):
+        return self.normal_font.render('Ai took: ' + str(self.turns_analyzed_by_ai) + ' turns', True, settings.Colors.WHITE.value)

@@ -31,7 +31,9 @@ cdef class Game:
     cdef current_player_chip_column
     cdef highlighted_chips
 
-
+    cdef object generate_right_header_text(self)
+    cdef draw_status(self, str status_text, status_color)
+    cdef draw_right_header_rect(self)
     cdef init_new_game(self)
     cdef execute_update_dependant_on_state(self)
     cpdef execute_operation_while_playing(self, pygame_button)

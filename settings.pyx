@@ -1,7 +1,6 @@
 from enum import Enum
 import pygame
 import sys
-import os
 import gui
 import utils
 from cpython cimport bool
@@ -10,8 +9,6 @@ from cpython cimport bool
 class GuiTheme(gui.DefaultTheme):
     def __init__(self, sounds_volume=0.5):
         gui.DefaultTheme.__init__(self)
-
-        # self.hover_sound = utils.load_sound('hover.wav', volume=sounds_volume)
         self.click_sound = utils.load_sound('click.wav', volume=sounds_volume)
 
 
@@ -53,6 +50,7 @@ RESOURCES_ROOT = 'resources' if getattr(sys, 'frozen', False) else 'resources'
 VERSION = '1.2'
 LAN_IDENTIFIER = '51af46a9396f46cdae0eedc4efa9d7a1'
 
+cdef list MUSIC_LIST = ['techno_dreaming.wav', 'techno_celebration.wav', 'electric_rain.wav', 'snake_trance.wav']
 cdef short FPS = 30
 cdef short IMAGES_SIDE_SIZE = 80
 cdef short COLS = 7
@@ -82,7 +80,7 @@ cdef str YELLOW_CHIP_IMAGE = 'yellow_chip.png'
 cdef str GAME_NAME = 'AI Connect Four v'
 #cdef short MAX_DEPTH = 3
 cdef short MAX_DEPTH = 5
-cdef short MAX_DEPTH_AB = 20
+cdef short MAX_DEPTH_AB = 7
 cdef short MIDDLE_MULTIPLIER = 2
 cdef long CHIP_COUNT_1_MULTIPLIER = 10
 cdef long CHIP_COUNT_2_MULTIPLIER = 100
