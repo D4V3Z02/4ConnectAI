@@ -3,14 +3,15 @@ from objects cimport Player
 import settings
 cimport settings
 from screens.game import Game
-cimport screens.minmax_ai as minmax
+from screens.minmax_ai import GameMinmaxAI as GameMinmaxAI
+from screens.minmax_ai cimport GameMinmaxAI as GameMinmaxAI
 from screens.minmax_ai cimport Move as Move
 from screens.minmax_ai cimport PotentialMove as PotentialMove
 from cpython cimport bool
 
 cdef long BIG_VALUE = settings.BIG_VALUE
 
-cdef class AlphaBetaAI(minmax.GameMinmaxAI):
+cdef class AlphaBetaAI(GameMinmaxAI):
     def __init__(self, app):
         self.turns_analyzed_by_ai = 0
         if (app is None):
