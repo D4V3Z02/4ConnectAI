@@ -6,6 +6,7 @@ This is a fork of an existing python-implementation of Connect Four from https:/
 - Added faster win-condition checking (does not check the whole board after one chip has been played)
 - Added an AI which plays random turns
 - Added an AI which uses the MinMax-Algorithm
+- Added an optimized AI which uses the MinMax-Algorithm with Alpha-Beta pruning
 - Optimized Python Code with Cython
 
 ## Prerequisites
@@ -23,6 +24,11 @@ the game.
 
 You can build Linux or Windows distributions with the build_linux.sh and build_windows.sh scripts.
 The scripts use PyInstaller for the build-process.
+
+## Configuration
+
+Configurations like search depth can be configured in the settings.pyx. This requires a recompilation with cython afterwards.
+The sound and music volume can be also configure in the connectfour.ini (which requires no recompilation).
 
 ## Usage
 
