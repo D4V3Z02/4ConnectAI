@@ -14,16 +14,21 @@ Python 3.6
 
 ## Installation
 
-Clone this repo, and then the usual `pip install -r requirements.txt`.
+Clone this repo, and install the required libraries for your python interpreter with: `pip install -r requirements.txt`.
 Then run `bash cython_linux.sh` or `bash cython_windows.sh` dependant on your Operating System.
 You can also start the game with python run.py --dev to start the cython_compiltation before starting
 the game.
+
+## Building
+
+You can build Linux or Windows distributions with the build_linux.sh and build_windows.sh scripts.
+The scripts use PyInstaller for the build-process.
 
 ## Usage
 
 ```
 pip install -r requirements.txt
-python run.py --dev # decompiles
+python run.py --dev # compile the game with cython and start it afterwards
 ```
 
 ## Controls
