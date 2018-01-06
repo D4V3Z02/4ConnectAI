@@ -43,3 +43,7 @@ python run.py --dev # compile the game with cython and start it afterwards
   - <kbd>←</kbd> and <kbd>→</kbd> moves the chip respectively to the left and to the right
   - <kbd>↓</kbd> drops the chip in the selected column
   - <kbd>↵</kbd> starts a new game when one is finished
+
+##Distributions
+
+compiled binaires can be downloaded at: https://gitlab.com/Dayvie/4Connect-dist
