@@ -7,7 +7,7 @@ build:
   stage: build
   script:
   - pip install -r requirements.txt
-  - bash build_linux.
+  - bash build_linux
   tags:
   - linux
   artifacts:
