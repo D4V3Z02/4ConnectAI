@@ -4,3 +4,4 @@ requests
 autobahn
 click
 cython
+configparser
