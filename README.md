@@ -8,10 +8,6 @@ This is a fork of an existing python-implementation of Connect Four from https:/
 - Added an AI which uses the MinMax-Algorithm
 - Optimized Python Code with Cython
 
-## TODO:
-
-- add alpha beta pruning to minmax
-
 ## Prerequisites
 
 Python 3.6
@@ -20,11 +16,14 @@ Python 3.6
 
 Clone this repo, and then the usual `pip install -r requirements.txt`.
 Then run `bash cython_linux.sh` or `bash cython_windows.sh` dependant on your Operating System.
+You can also start the game with python run.py --dev to start the cython_compiltation before starting
+the game.
 
 ## Usage
 
 ```
-python run.py
+pip install -r requirements.txt
+python run.py --dev # decompiles
 ```
 
 ## Controls
@@ -33,7 +32,3 @@ python run.py
   - <kbd>←</kbd> and <kbd>→</kbd> moves the chip respectively to the left and to the right
   - <kbd>↓</kbd> drops the chip in the selected column
   - <kbd>↵</kbd> starts a new game when one is finished
-
-## Credits
-
-- EpocDotFr for letting me use his existing source code and assets
