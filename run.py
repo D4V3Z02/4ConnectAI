@@ -11,10 +11,14 @@ import platform
 @click.option('--dev', is_flag=True, default=False, help='Dev mode')
 def run(dev):
     if dev:
-        if 'windows' in platform.system().lower():
-            subprocess.call("cython_windows.sh", shell=True)
-        if 'linux' in platform.system().lower():
-            subprocess.call("cython_linux.sh", shell=True)
+        try:
+            if 'windows' in platform.system().lower():
+                subprocess.check_output("cython_windows.sh", shell=True)
+            if 'linux' in platform.system().lower():
+                subprocess.check_output("cython_linux.sh", shell=True)
+        except subprocess.CalledProcessError as grepexc:
+            print('cythonize failed, exiting...')
+            exit(1)
     if 'SDL_VIDEO_WINDOW_POS' not in os.environ:
         os.environ['SDL_VIDEO_CENTERED'] = '1' # This makes the window centered on the screen
     logging.basicConfig(
