@@ -3,3 +3,4 @@ PyInstaller
 requests
 autobahn
 click
+cython

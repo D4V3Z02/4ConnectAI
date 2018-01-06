@@ -1,0 +1,14 @@
+image: python:3.6
+
+stages:
+    - build
+
+build:
+  stage: build
+  script:
+  - pip install -r requirements.txt
+  - bash build_linux.sh
+  tags:
+  - linux
+  artifacts:
+    untracked: true
