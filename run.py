@@ -15,7 +15,7 @@ def run(dev):
             if 'windows' in platform.system().lower():
                 subprocess.check_output("cython_windows.sh", shell=True)
             if 'linux' in platform.system().lower():
-                subprocess.check_output("cython_linux.sh", shell=True)
+                subprocess.check_output("bash cython_linux.sh", shell=True)
         except subprocess.CalledProcessError as grepexc:
             print('cythonize failed, exiting...')
             exit(1)
