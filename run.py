@@ -13,7 +13,7 @@ def run(dev):
     if dev:
         try:
             if 'windows' in platform.system().lower():
-                subprocess.check_output("cython_windows.sh", shell=True)
+                subprocess.check_output("bash cython_windows.sh", shell=True)
             if 'linux' in platform.system().lower():
                 subprocess.check_output("bash cython_linux.sh", shell=True)
         except subprocess.CalledProcessError as grepexc:
