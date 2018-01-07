@@ -81,7 +81,8 @@ cdef class GameMinmaxAI(ai.AIGame):
 
     cdef Move increaseMoveScoreIfMiddleColumn(self, Move move):
         #print(int(settings.COLS / 2) - 2, int(settings.COLS / 2) + 2)
-        if move.column > int(settings.COLS / 2) - 2 and move.column < int(settings.COLS / 2) + 2:
+        cdef short boarder_size = 2
+        if move.column > int(settings.COLS / 2) - boarder_size and move.column < int(settings.COLS / 2) + boarder_size:
             move.score = move.score * settings.MIDDLE_MULTIPLIER
         return move
 
@@ -175,7 +176,7 @@ cdef class GameMinmaxAI(ai.AIGame):
                                                                       ai_player)
             move_score += self.get_move_score(consecutive_chips, x)
         if depth <= 2 and self.did_player_win(board, self.red_player):
-           move_score = -BIG_VALUE
+           move_score = move_score - BIG_VALUE
         if depth <= 2 and self.did_player_win(board, self.yellow_player):
            move_score = BIG_VALUE
         return move_score
