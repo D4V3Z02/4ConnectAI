@@ -78,7 +78,6 @@ cdef bool EMPTY_SYMBOL = False
 cdef str RED_CHIP_IMAGE = 'red_chip.png'
 cdef str YELLOW_CHIP_IMAGE = 'yellow_chip.png'
 cdef str GAME_NAME = 'AI Connect Four v'
-#cdef short MAX_DEPTH = 3
 cdef short MAX_DEPTH = 5
 cdef short MAX_DEPTH_AB = 7
 cdef short MIDDLE_MULTIPLIER = 2

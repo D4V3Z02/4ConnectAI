@@ -41,7 +41,8 @@ cdef class AlphaBetaAI(GameMinmaxAI):
                 potential_moves.append(PotentialMove(child_board, column))
         # end recursion if depth is reached or no moves possible
         if depth == settings.MAX_DEPTH_AB or len(potential_moves) == 0 or self.did_someone_win(
-                board, depth):
+                board):
+            #print('ret max', self.evaluate_board(board, ai_player, depth), first_round_column)
             return Move(self.evaluate_board(board, ai_player, depth), first_round_column)
         cdef Move max_move = Move(alpha, first_round_column)
         cdef Move min_move
@@ -50,12 +51,14 @@ cdef class AlphaBetaAI(GameMinmaxAI):
                 min_move = self.min_turn_alpha_beta(depth + 1, potential_move.board, ai_player,
                                                     potential_move.column, max_move.score, beta)
                 min_move = self.increaseMoveScoreIfMiddleColumn(min_move)
+                #print('ret top', min_move.score, min_move.column)
             else:
                 min_move = self.min_turn_alpha_beta(depth + 1, potential_move.board, ai_player,
                                                     first_round_column, max_move.score, beta)
             if min_move.score > max_move.score:
                 max_move = min_move
                 if max_move.score >= beta:
+                    #print('break beta', max_move.score)
                     break
         return max_move
 
@@ -72,7 +75,8 @@ cdef class AlphaBetaAI(GameMinmaxAI):
                 potential_moves.append(PotentialMove(child_board, column))
         # end recursion if depth is reached or no moves possible
         if depth == settings.MAX_DEPTH_AB or len(potential_moves) == 0 or self.did_someone_win(
-                board, depth):
+                board):
+            #print('ret min', self.evaluate_board(board, ai_player, depth), first_round_column)
             return Move(self.evaluate_board(board, ai_player, depth), first_round_column)
         cdef Move min_move = Move(beta, first_round_column)
         cdef Move max_move
@@ -82,6 +86,7 @@ cdef class AlphaBetaAI(GameMinmaxAI):
             if max_move.score < min_move.score:
                 min_move = max_move
                 if min_move.score <= alpha:
+                    #print('break alpha', max_move.score)
                     break
         return min_move
 

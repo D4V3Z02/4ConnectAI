@@ -39,8 +39,8 @@ cdef class GameMinmaxAI(ai.AIGame):
                 child_board[column][chip_row_stop] = ai_player.id
                 potential_moves.append(PotentialMove(child_board, column))
         # end recursion if depth is reached or no moves possible
-        if depth == settings.MAX_DEPTH or len(potential_moves) == 0 or self.did_someone_win(board,
-                                                                                            depth):
+        if depth == settings.MAX_DEPTH or len(potential_moves) == 0 or self.did_someone_win(board):
+            #print('ret max', self.evaluate_board(board, ai_player, depth), first_round_column)
             return Move(self.evaluate_board(board, ai_player, depth), first_round_column)
         cdef Move move = Move(-BIG_VALUE, first_round_column)
         cdef Move min_move
@@ -49,6 +49,7 @@ cdef class GameMinmaxAI(ai.AIGame):
                 min_move = self.min_turn(depth + 1, potential_move.board, ai_player,
                                          potential_move.column)
                 min_move = self.increaseMoveScoreIfMiddleColumn(min_move)
+                #print(min_move.column, min_move.score)
             else:
                 min_move = self.min_turn(depth + 1, potential_move.board, ai_player,
                                          first_round_column)
@@ -67,8 +68,8 @@ cdef class GameMinmaxAI(ai.AIGame):
                 child_board[column][chip_row_stop] = self.red_player.id
                 potential_moves.append(PotentialMove(child_board, column))
         # end recursion if depth is reached or no moves possible
-        if depth == settings.MAX_DEPTH or len(potential_moves) == 0 or self.did_someone_win(board,
-                                                                                            depth):
+        if depth == settings.MAX_DEPTH or len(potential_moves) == 0 or self.did_someone_win(board):
+            #print('ret min', self.evaluate_board(board, ai_player, depth), first_round_column)
             return Move(self.evaluate_board(board, ai_player, depth), first_round_column)
         cdef Move move = Move(BIG_VALUE, first_round_column)
         cdef Move max_move
@@ -79,7 +80,8 @@ cdef class GameMinmaxAI(ai.AIGame):
         return move
 
     cdef Move increaseMoveScoreIfMiddleColumn(self, Move move):
-        if move.column > int(settings.COLS / 2) - 1 and move.column < int(settings.COLS / 2) + 1:
+        #print(int(settings.COLS / 2) - 2, int(settings.COLS / 2) + 2)
+        if move.column > int(settings.COLS / 2) - 2 and move.column < int(settings.COLS / 2) + 2:
             move.score = move.score * settings.MIDDLE_MULTIPLIER
         return move
 
@@ -147,11 +149,6 @@ cdef class GameMinmaxAI(ai.AIGame):
     cdef long evaluate_board(self, list board, Player ai_player, short depth):
         """Scores the board for the ai player"""
         cdef int move_score = self.evaluate_columns(board, ai_player)
-        if depth <= 2 and self.did_player_win(board, self.red_player):
-            move_score = -BIG_VALUE
-            return move_score
-        if depth <= 2 and self.did_player_win(board, self.yellow_player):
-            move_score = BIG_VALUE - 1
         move_score += self.evaluate_rows(board, ai_player)
         # Check each "/" diagonal starting at the top left corner
         x = 0
@@ -177,9 +174,13 @@ cdef class GameMinmaxAI(ai.AIGame):
             consecutive_chips = self.count_consecutive_diagonal_chips(0, None, x, y, (1, 1), board,
                                                                       ai_player)
             move_score += self.get_move_score(consecutive_chips, x)
+        if depth <= 2 and self.did_player_win(board, self.red_player):
+           move_score = -BIG_VALUE
+        if depth <= 2 and self.did_player_win(board, self.yellow_player):
+           move_score = BIG_VALUE
         return move_score
 
-    cdef bool did_someone_win(self, list board, short depth):
+    cdef bool did_someone_win(self, list board):
         cdef bool ai_won = self.did_player_win(board, self.yellow_player)
         cdef bool human_player_won = self.did_player_win(board, self.red_player)
         if ai_won or human_player_won:
