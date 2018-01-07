@@ -1,0 +1,20 @@
+
+\begin{frame}
+\frametitle{Heuristik zur Bewertung des Spielbretts}
+
+\begin{enumerate}
+	\item Überprüfe ob Chips diagonal, horizontal oder vertikal aneinander liegen. Erhöhe dabei den Wert des Spielbretts anhand der Anzahl der aneinanderliegenden Chips:
+	\begin{itemize}
+		\item um 10 bei einem Chip
+		\item um 100 bei zwei Chips
+		\item um 1000 bei drei Chips
+		\item um 10000 bei vier Chips
+	\end{itemize}
+	\item Multipliziere den Wert des Spielbretts mit zwei, falls der Chip im ersten Spielzug von Max in eine mittlere Spalte gelegt wurde.
+	\item setze den Wert des Spielbretts auf -999999999, falls der Gegner (menschliche Spieler) im nächsten Spielzug gewinnt.
+	\item setze den Wert des Spielbretts auf 999999999, falls der KI-Spieler im nächsten Spielzug gewinnt.
+\end{enumerate}
+\end{frame}
+
+
+
