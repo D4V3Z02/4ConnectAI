@@ -9,7 +9,6 @@ from cpython cimport bool
 from screens.ai cimport Move as Move
 from screens.ai cimport PotentialMove as PotentialMove
 
-cdef long BIG_VALUE = settings.BIG_VALUE
 
 cdef class GameMinmaxAI(ai.AIGame):
     def __init__(self, app):
@@ -17,7 +16,7 @@ cdef class GameMinmaxAI(ai.AIGame):
         if (app is None):
             return
         print('Starting minmax game')
-        Game.__init__(self, app)
+        ai.AIGame.__init__(self, app)
 
     cpdef Move min_max(self, list board, int depth, Player ai_player):
         """
@@ -38,7 +37,7 @@ cdef class GameMinmaxAI(ai.AIGame):
         if depth == settings.MAX_DEPTH or len(potential_moves) == 0 or self.did_someone_win(board):
             #print('ret max', self.evaluate_board(board, ai_player, depth), first_round_column)
             return Move(self.evaluate_board(board, ai_player, depth), first_round_column)
-        cdef Move move = Move(-BIG_VALUE, first_round_column)
+        cdef Move move = Move(-self.BIG_VALUE, first_round_column)
         cdef Move min_move
         for potential_move in potential_moves:
             if depth == 0:
@@ -68,7 +67,7 @@ cdef class GameMinmaxAI(ai.AIGame):
         # end recursion if depth is reached or no moves possible
         if depth == settings.MAX_DEPTH or len(potential_moves) == 0 or self.did_someone_win(board):
             return Move(self.evaluate_board(board, ai_player, depth), first_round_column)
-        cdef Move move = Move(BIG_VALUE, first_round_column)
+        cdef Move move = Move(self.BIG_VALUE, first_round_column)
         cdef Move max_move
         for potential_move in potential_moves:
             board[potential_move.column][potential_move.row_stop] = self.red_player.id

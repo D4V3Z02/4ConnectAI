@@ -9,7 +9,6 @@ from screens.ai cimport Move as Move
 from screens.ai cimport PotentialMove as PotentialMove
 from cpython cimport bool
 
-cdef long BIG_VALUE = settings.BIG_VALUE
 
 cdef class AlphaBetaAI(GameMinmaxAI):
     def __init__(self, app):
@@ -17,15 +16,15 @@ cdef class AlphaBetaAI(GameMinmaxAI):
         if (app is None):
             return
         print('Starting alpha_beta game')
-        Game.__init__(self, app)
+        GameMinmaxAI.__init__(self, app)
 
     cpdef Move min_max(self, list board, int depth, Player ai_player):
         """
         Returns the best move found by the alpha_beta algorithm
         """
         self.turns_analyzed_by_ai = 0
-        return self.max_turn_alpha_beta(0, self.copy_board(board), ai_player, -1, -BIG_VALUE,
-                                        +BIG_VALUE)
+        return self.max_turn_alpha_beta(0, self.copy_board(board), ai_player, -1, -self.BIG_VALUE,
+                                        self.BIG_VALUE)
 
     cdef Move max_turn_alpha_beta(self, int depth, list board, Player ai_player,
                                   short first_round_column, long alpha, long beta):
@@ -48,14 +47,14 @@ cdef class AlphaBetaAI(GameMinmaxAI):
             if depth == 0:
                 board[potential_move.column][potential_move.row_stop] = ai_player.id
                 min_move = self.min_turn_alpha_beta(depth + 1, potential_move.board, ai_player,
-                                                        potential_move.column, max_move.score, beta)
+                                                    potential_move.column, max_move.score, beta)
                 board[potential_move.column][potential_move.row_stop] = settings.EMPTY_SYMBOL
                 min_move = self.increaseMoveScoreIfMiddleColumn(min_move)
                 print('Top level score and column:', min_move.score, min_move.column)
             else:
                 board[potential_move.column][potential_move.row_stop] = ai_player.id
                 min_move = self.min_turn_alpha_beta(depth + 1, potential_move.board, ai_player,
-                                                        first_round_column, max_move.score, beta)
+                                                    first_round_column, max_move.score, beta)
                 board[potential_move.column][potential_move.row_stop] = settings.EMPTY_SYMBOL
             if min_move.score > max_move.score:
                 max_move = min_move

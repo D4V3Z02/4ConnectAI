@@ -4,6 +4,7 @@ from cpython cimport bool
 
 
 cdef class AIGame(game.Game):
+    cdef long BIG_VALUE
     cpdef update_while_playing(self)
     cdef update_ai_player(self)
     cdef long turns_analyzed_by_ai

@@ -9,7 +9,6 @@ from screens.ai cimport Move as Move
 from screens.ai cimport PotentialMove as PotentialMove
 from cpython cimport bool
 
-cdef long BIG_VALUE = settings.BIG_VALUE
 
 cdef class AlphaBetaAICopy(GameMinmaxAI):
     def __init__(self, app):
@@ -17,15 +16,15 @@ cdef class AlphaBetaAICopy(GameMinmaxAI):
         if (app is None):
             return
         print('Starting alpha_beta game')
-        Game.__init__(self, app)
+        GameMinmaxAI.__init__(self, app)
 
     cpdef Move min_max(self, list board, int depth, Player ai_player):
         """
         Returns the best move found by the alpha_beta algorithm
         """
         self.turns_analyzed_by_ai = 0
-        return self.max_turn_alpha_beta(0, self.copy_board(board), ai_player, -1, -BIG_VALUE,
-                                        +BIG_VALUE)
+        return self.max_turn_alpha_beta(0, self.copy_board(board), ai_player, -1, -self.BIG_VALUE,
+                                        self.BIG_VALUE)
 
     cdef Move max_turn_alpha_beta(self, int depth, list board, Player ai_player,
                                   short first_round_column, long alpha, long beta):

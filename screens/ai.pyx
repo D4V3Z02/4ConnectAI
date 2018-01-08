@@ -8,14 +8,13 @@ import time
 from cpython cimport bool
 from objects cimport Player
 
-cdef long BIG_VALUE = settings.BIG_VALUE
-
 
 cdef class AIGame(game.Game):
 
     def __init__(self, app):
         if (app is None):
             return
+        self.BIG_VALUE = settings.BIG_VALUE
         game.Game.__init__(self, app)
 
     cpdef update_while_playing(self):
@@ -148,9 +147,9 @@ cdef class AIGame(game.Game):
                                                                       ai_player)
             move_score += self.get_move_score(consecutive_chips, x)
         if depth <= 2 and self.did_player_win(board, self.red_player):
-           move_score = move_score - BIG_VALUE
+           move_score = move_score - self.BIG_VALUE
         if depth <= 2 and self.did_player_win(board, self.yellow_player):
-           move_score = BIG_VALUE
+           move_score = self.BIG_VALUE
         return move_score
 
     cdef bool did_someone_win(self, list board):
