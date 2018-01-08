@@ -27,33 +27,6 @@ cdef class AlphaBetaAI(GameMinmaxAI):
         return self.max_turn_alpha_beta(0, self.copy_board(board), ai_player, -1, -BIG_VALUE,
                                         +BIG_VALUE)
 
-
-    cdef Move max_turn(self, int depth, list board, Player ai_player, short first_round_column):
-        self.turns_analyzed_by_ai += 1
-        cdef list potential_moves = []
-        cdef short chip_row_stop = 0
-        for column in range(len(board)):
-            chip_row_stop = self.get_free_row(column, board=board)
-            if chip_row_stop >= 0:
-                potential_moves.append(PotentialMove(board, column, chip_row_stop))
-        # end recursion if depth is reached or no moves possible
-        if depth == settings.MAX_DEPTH or len(potential_moves) == 0 or self.did_someone_win(board):
-            #print('ret max', self.evaluate_board(board, ai_player, depth), first_round_column)
-            return Move(self.evaluate_board(board, ai_player, depth), first_round_column)
-        cdef Move move = Move(-BIG_VALUE, first_round_column)
-        cdef Move min_move
-        for potential_move in potential_moves:
-            board[potential_move.column][potential_move.row_stop] = ai_player.id
-            min_move = self.min_turn(depth + 1, potential_move.board, ai_player,
-                                         potential_move.column)
-            board[potential_move.column][potential_move.row_stop] = settings.EMPTY_SYMBOL
-            if depth == 0:
-                min_move = self.increaseMoveScoreIfMiddleColumn(min_move)
-            if min_move.score > move.score:
-                move = min_move
-        return move
-
-
     cdef Move max_turn_alpha_beta(self, int depth, list board, Player ai_player,
                                   short first_round_column, long alpha, long beta):
         # make all possible moves for the current player
@@ -72,16 +45,21 @@ cdef class AlphaBetaAI(GameMinmaxAI):
         cdef Move max_move = Move(alpha, 0)
         cdef Move min_move
         for potential_move in potential_moves:
-            board[potential_move.column][potential_move.row_stop] = ai_player.id
-            min_move = self.min_turn_alpha_beta(depth + 1, potential_move.board, ai_player,
-                                                    potential_move.column, max_move.score, beta)
-            board[potential_move.column][potential_move.row_stop] = settings.EMPTY_SYMBOL
             if depth == 0:
+                board[potential_move.column][potential_move.row_stop] = ai_player.id
+                min_move = self.min_turn_alpha_beta(depth + 1, potential_move.board, ai_player,
+                                                        potential_move.column, max_move.score, beta)
+                board[potential_move.column][potential_move.row_stop] = settings.EMPTY_SYMBOL
                 min_move = self.increaseMoveScoreIfMiddleColumn(min_move)
+                print('Top level score and column:', min_move.score, min_move.column)
+            else:
+                board[potential_move.column][potential_move.row_stop] = ai_player.id
+                min_move = self.min_turn_alpha_beta(depth + 1, potential_move.board, ai_player,
+                                                        first_round_column, max_move.score, beta)
+                board[potential_move.column][potential_move.row_stop] = settings.EMPTY_SYMBOL
             if min_move.score > max_move.score:
                 max_move = min_move
                 if max_move.score >= beta:
-                    #print('break beta', max_move.score)
                     break
         return max_move
 

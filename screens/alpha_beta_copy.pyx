@@ -11,7 +11,7 @@ from cpython cimport bool
 
 cdef long BIG_VALUE = settings.BIG_VALUE
 
-cdef class AlphaBetaAI(GameMinmaxAI):
+cdef class AlphaBetaAICopy(GameMinmaxAI):
     def __init__(self, app):
         self.turns_analyzed_by_ai = 0
         if (app is None):
@@ -51,7 +51,7 @@ cdef class AlphaBetaAI(GameMinmaxAI):
                 min_move = self.min_turn_alpha_beta(depth + 1, potential_move.board, ai_player,
                                                     potential_move.column, max_move.score, beta)
                 min_move = self.increaseMoveScoreIfMiddleColumn(min_move)
-                #print('ret top', min_move.score, min_move.column)
+                print('Top level score and column:', min_move.score, min_move.column)
             else:
                 min_move = self.min_turn_alpha_beta(depth + 1, potential_move.board, ai_player,
                                                     first_round_column, max_move.score, beta)

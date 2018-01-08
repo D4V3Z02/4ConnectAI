@@ -1,10 +1,12 @@
 cimport screens.game as game
-#from screens import lobby
-from screens import negamax_ai
-from screens import random_ai
 from screens import minmax_ai
+from screens import minmax_ai_copy
+from screens cimport minmax_ai
+from screens cimport minmax_ai_copy
 from screens import alpha_beta
-from screens import minmax_ai_copy_turn
+from screens import alpha_beta_copy
+from screens cimport alpha_beta
+from screens cimport alpha_beta_copy
 import pygame
 import logging
 import settings
@@ -19,6 +21,7 @@ class Menu:
     def __init__(self, app, force_music=False):
         logging.info('Initializing menu')
         self.app = app
+        self.gui_container = None
         logging.info('Loading fonts')
         self.title_font = utils.load_font('monofur.ttf', 62)
         self.normal_font = utils.load_font('monofur.ttf', 18)
@@ -44,27 +47,28 @@ class Menu:
         self.app.set_current_screen(game.Game)
 
     def start_minmax_copy_ai_game(self, widget):
-        logging.info('Starting Minmax AI with copy game')
-        self.app.set_current_screen(minmax_ai_copy_turn.GameMinmaxAICopy)
+        logging.info('Starting Minmax AI Copy')
+        self.app.set_current_screen(minmax_ai_copy.GameMinmaxAICopy)
 
     def start_minmax_ai_game(self, widget):
-        logging.info('Starting Minmax AI game')
+        logging.info('Starting Minmax AI Stateful')
         self.app.set_current_screen(minmax_ai.GameMinmaxAI)
 
-    def start_negamax_ai_game(self, widget):
-        logging.info('Starting AI game')
-        self.app.set_current_screen(negamax_ai.GameNegamaxAI)
-
     def start_alpha_beta_ai_game(self, widget):
-        logging.info('Starting AlphaBeta AI game')
+        logging.info('Starting AlphaBeta AI Stateful')
         self.app.set_current_screen(alpha_beta.AlphaBetaAI)
+
+    def start_alpha_beta_copy_ai_game(self, widget):
+        logging.info('Starting AlphaBeta AI Copy')
+        self.app.set_current_screen(alpha_beta_copy.AlphaBetaAICopy)
 
     def btn_quit_click(self, widget):
         pygame.quit()
         sys.exit()
 
     def load_gui(self):
-        gui.init(theme=settings.GuiTheme(sounds_volume=self.app.config.getfloat('connectfour', 'sounds_volume')))
+        gui.init(theme=settings.GuiTheme(
+            sounds_volume=self.app.config.getfloat('connectfour', 'sounds_volume')))
         self.gui_container = pygame.sprite.Group()
         self.gui_container.add(self.create_menu_button(
             y=150,
@@ -72,24 +76,29 @@ class Menu:
             on_click=self.btn_offline_game_click
         ))
         self.gui_container.add(self.create_menu_button(
-            y=440,
+            y=510,
             text='Quit',
             on_click=self.btn_quit_click
         ))
         self.gui_container.add(self.create_menu_button(
             y=210,
+            text='Play vs an AI (MinMax Stateful)',
+            on_click=self.start_minmax_ai_game
+        ))
+        self.gui_container.add(self.create_menu_button(
+            y=280,
             text='Play vs an AI (MinMax Copying Boards)',
             on_click=self.start_minmax_copy_ai_game
         ))
         self.gui_container.add(self.create_menu_button(
-            y=280,
-            text='Play vs an AI (MinMax Reset Boards)',
-            on_click=self.start_minmax_ai_game
+            y=350,
+            text='Play vs an AI (AlphaBeta Stateful)',
+            on_click=self.start_alpha_beta_ai_game
         ))
         self.gui_container.add(self.create_menu_button(
-            y=350,
-            text='Play vs an AI (AlphaBeta Algorithm)',
-            on_click=self.start_alpha_beta_ai_game
+            y=420,
+            text='Play vs an AI (AlphaBeta Copying Boards)',
+            on_click=self.start_alpha_beta_copy_ai_game
         ))
 
     def draw_title(self):
@@ -105,7 +114,8 @@ class Menu:
 
     def update(self):
         for event in pygame.event.get():
-            if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+            if event.type == pygame.QUIT or (
+                    event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 pygame.quit()
                 sys.exit()
             gui.event_handler(self.gui_container, event)
