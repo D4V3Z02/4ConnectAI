@@ -43,7 +43,7 @@ cdef class AlphaBetaAICopy(GameMinmaxAI):
                 board):
             #print('ret max', self.evaluate_board(board, ai_player, depth), first_round_column)
             return Move(self.evaluate_board(board, ai_player, depth), first_round_column)
-        cdef Move max_move = Move(alpha, 0)
+        cdef Move max_move = Move(alpha, first_round_column)
         cdef Move min_move
         for potential_move in potential_moves:
             if depth == 0:
@@ -77,7 +77,7 @@ cdef class AlphaBetaAICopy(GameMinmaxAI):
                 board):
             #print('ret min', self.evaluate_board(board, ai_player, depth), first_round_column)
             return Move(self.evaluate_board(board, ai_player, depth), first_round_column)
-        cdef Move min_move = Move(beta, 0)
+        cdef Move min_move = Move(beta, first_round_column)
         cdef Move max_move
         for potential_move in potential_moves:
             max_move = self.max_turn_alpha_beta(depth + 1, potential_move.board, ai_player,
