@@ -23,6 +23,7 @@ cdef class AIGame(game.Game):
     cdef long get_move_score(self, int chip_count, int column)
     cpdef void place_chip_ai(self, int column)
 
+
 cdef class PotentialMove:
     cdef public list board
     cdef public short column
