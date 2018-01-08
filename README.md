@@ -3,11 +3,12 @@
 This is a fork of an existing python-implementation of Connect Four from https://github.com/EpocDotFr/connectfour
 
 ## Improvements:
-- Added faster win-condition checking (does not check the whole board after one chip has been played)
-- Added an AI which plays random turns
-- Added an AI which uses the MinMax-Algorithm
-- Added an optimized AI which uses the MinMax-Algorithm with Alpha-Beta pruning
+- Added faster win-condition checking
 - Optimized Python Code with Cython
+- Added an AI which uses the MinMax-Algorithm
+- Added an AI which uses the MinMax-Algorithm by copying its boards
+- Added an optimized AI which uses the MinMax-Algorithm with Alpha-Beta pruning
+- Added an optimized AI which uses the MinMax-Algorithm with Alpha-Beta pruning by copying its boards
 
 ## Prerequisites
 
@@ -46,4 +47,4 @@ python run.py --dev # compile the game with cython and start it afterwards
 
 ## Distributions
 
-compiled binaires can be downloaded at: https://gitlab.com/Dayvie/4Connect-dist
+compiled binaries can be downloaded at: https://gitlab.com/Dayvie/4Connect-dist
