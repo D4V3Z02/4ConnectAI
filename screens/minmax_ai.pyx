@@ -47,7 +47,6 @@ cdef class GameMinmaxAI(ai.AIGame):
                                          potential_move.column)
                 board[potential_move.column][potential_move.row_stop] = settings.EMPTY_SYMBOL
                 min_move = self.increaseMoveScoreIfMiddleColumn(min_move)
-                print(min_move.column, min_move.score)
             else:
                 board[potential_move.column][potential_move.row_stop] = ai_player.id
                 min_move = self.min_turn(depth + 1, potential_move.board, ai_player,
