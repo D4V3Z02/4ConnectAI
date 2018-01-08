@@ -4,6 +4,7 @@ from screens import negamax_ai
 from screens import random_ai
 from screens import minmax_ai
 from screens import alpha_beta
+from screens import minmax_ai_copy_turn
 import pygame
 import logging
 import settings
@@ -42,9 +43,9 @@ class Menu:
         logging.info('Offline game button clicked')
         self.app.set_current_screen(game.Game)
 
-    def start_random_ai_game(self, widget):
-        logging.info('Starting Random AI game')
-        self.app.set_current_screen(random_ai.RandomAI)
+    def start_minmax_copy_ai_game(self, widget):
+        logging.info('Starting Minmax AI with copy game')
+        self.app.set_current_screen(minmax_ai_copy_turn.GameMinmaxAICopy)
 
     def start_minmax_ai_game(self, widget):
         logging.info('Starting Minmax AI game')
@@ -77,12 +78,12 @@ class Menu:
         ))
         self.gui_container.add(self.create_menu_button(
             y=210,
-            text='Play vs an AI (Random AI moves)',
-            on_click=self.start_random_ai_game
+            text='Play vs an AI (MinMax Copying Boards)',
+            on_click=self.start_minmax_copy_ai_game
         ))
         self.gui_container.add(self.create_menu_button(
             y=280,
-            text='Play vs an AI (MinMax Algorithm)',
+            text='Play vs an AI (MinMax Reset Boards)',
             on_click=self.start_minmax_ai_game
         ))
         self.gui_container.add(self.create_menu_button(

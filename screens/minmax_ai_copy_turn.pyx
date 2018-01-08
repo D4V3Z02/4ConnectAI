@@ -11,7 +11,7 @@ from screens.ai cimport PotentialMove as PotentialMove
 
 cdef long BIG_VALUE = settings.BIG_VALUE
 
-cdef class GameMinmaxAI(ai.AIGame):
+cdef class GameMinmaxAICopy(ai.AIGame):
     def __init__(self, app):
         self.turns_analyzed_by_ai = 0
         if (app is None):
@@ -28,12 +28,15 @@ cdef class GameMinmaxAI(ai.AIGame):
 
     cdef Move max_turn(self, int depth, list board, Player ai_player, short first_round_column):
         self.turns_analyzed_by_ai += 1
-        cdef list potential_moves = []
-        cdef short chip_row_stop = 0
+        # make all possible moves for the current player
+        cdef list child_board, potential_moves = []
+        cdef int chip_row_stop = 0
         for column in range(len(board)):
             chip_row_stop = self.get_free_row(column, board=board)
             if chip_row_stop >= 0:
-                potential_moves.append(PotentialMove(board, column, chip_row_stop))
+                child_board = self.copy_board(board)
+                child_board[column][chip_row_stop] = ai_player.id
+                potential_moves.append(PotentialMove(child_board, column, 0))
         # end recursion if depth is reached or no moves possible
         if depth == settings.MAX_DEPTH or len(potential_moves) == 0 or self.did_someone_win(board):
             #print('ret max', self.evaluate_board(board, ai_player, depth), first_round_column)
@@ -42,12 +45,11 @@ cdef class GameMinmaxAI(ai.AIGame):
         cdef Move min_move
         for potential_move in potential_moves:
             if depth == 0:
-                board[potential_move.column][potential_move.row_stop] = ai_player.id
                 min_move = self.min_turn(depth + 1, potential_move.board, ai_player,
                                          potential_move.column)
-                board[potential_move.column][potential_move.row_stop] = settings.EMPTY_SYMBOL
                 min_move = self.increaseMoveScoreIfMiddleColumn(min_move)
                 print(min_move.column, min_move.score)
+                #print(min_move.column, min_move.s
             else:
                 min_move = self.min_turn(depth + 1, potential_move.board, ai_player,
                                          first_round_column)
@@ -57,24 +59,26 @@ cdef class GameMinmaxAI(ai.AIGame):
 
     cdef Move min_turn(self, int depth, list board, Player ai_player, short first_round_column):
         self.turns_analyzed_by_ai += 1
-        cdef list potential_moves = []
-        cdef short chip_row_stop = 0
+        cdef list child_board, potential_moves = []
+        cdef int chip_row_stop = 0
         for column in range(len(board)):
             chip_row_stop = self.get_free_row(column, board=board)
             if chip_row_stop >= 0:
-                potential_moves.append(PotentialMove(board, column, chip_row_stop))
+                child_board = self.copy_board(board)
+                child_board[column][chip_row_stop] = self.red_player.id
+                potential_moves.append(PotentialMove(child_board, column, 0))
         # end recursion if depth is reached or no moves possible
         if depth == settings.MAX_DEPTH or len(potential_moves) == 0 or self.did_someone_win(board):
+            #print('ret min', self.evaluate_board(board, print(min_move.column, min_move.score)uuuuuuuuuai_player, depth), first_round_column)
             return Move(self.evaluate_board(board, ai_player, depth), first_round_column)
         cdef Move move = Move(BIG_VALUE, first_round_column)
         cdef Move max_move
         for potential_move in potential_moves:
-            board[potential_move.column][potential_move.row_stop] = self.red_player.id
             max_move = self.max_turn(depth + 1, potential_move.board, ai_player, first_round_column)
-            board[potential_move.column][potential_move.row_stop] = settings.EMPTY_SYMBOL
             if max_move.score < move.score:
                 move = max_move
         return move
+
 
 if __name__ == "__main__":
     print(min(1, 2))
