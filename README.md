@@ -10,6 +10,11 @@ This is a fork of an existing python-implementation of Connect Four from https:/
 - Added an optimized AI which uses the stateful MinMax-Algorithm with Alpha-Beta pruning and a search depth of 7
 - Added an optimized AI which uses the MinMax-Algorithm by copying boards with Alpha-Beta pruning and a search depth of 7
 
+## Features for the future:
+
+- Parallelized copy mode with alpha beta pruning
+- Trace mode which visualizes what the AI plans
+
 ## Prerequisites
 
 - Python 3.6
