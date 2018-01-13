@@ -48,7 +48,7 @@ cdef class AIGame(game.Game):
         return [x[:] for x in board]
 
     cdef object generate_right_header_text(self):
-        return self.normal_font.render('Ai took: ' + str(self.turns_analyzed_by_ai) + ' turns', True, settings.Colors.WHITE.value)
+        return self.normal_font.render('Ai evaluated: ' + str(self.turns_analyzed_by_ai) + ' turns', True, settings.Colors.WHITE.value)
 
     cdef Move increaseMoveScoreIfMiddleColumn(self, Move move):
         #print(int(settings.COLS / 2) - 2, int(settings.COLS / 2) + 2)
