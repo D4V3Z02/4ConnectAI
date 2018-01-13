@@ -9,7 +9,6 @@ from screens.ai cimport Move as Move
 from screens.ai cimport PotentialMove as PotentialMove
 from cpython cimport bool
 
-
 cdef class AlphaBetaAICopy(GameMinmaxAI):
     def __init__(self, app):
         self.turns_analyzed_by_ai = 0
@@ -41,24 +40,31 @@ cdef class AlphaBetaAICopy(GameMinmaxAI):
         # end recursion if depth is reached or no moves possible
         if depth == settings.MAX_DEPTH_AB or len(potential_moves) == 0 or self.did_someone_win(
                 board):
-            #print('ret max', self.evaluate_board(board, ai_player, depth), first_round_column)
             return Move(self.evaluate_board(board, ai_player, depth), first_round_column)
         cdef Move max_move = Move(alpha, first_round_column)
+        cdef list max_move_list_first_level = []
         cdef Move min_move
         for potential_move in potential_moves:
             if depth == 0:
                 min_move = self.min_turn_alpha_beta(depth + 1, potential_move.board, ai_player,
                                                     potential_move.column, max_move.score, beta)
-                min_move = self.increaseMoveScoreIfMiddleColumn(min_move)
-                print('Top level score and column:', min_move.score, min_move.column)
+                max_move_list_first_level.append(min_move)
             else:
                 min_move = self.min_turn_alpha_beta(depth + 1, potential_move.board, ai_player,
                                                     first_round_column, max_move.score, beta)
             if min_move.score > max_move.score:
                 max_move = min_move
                 if max_move.score >= beta:
-                    #print('break beta', max_move.score)
                     break
+        cdef Move move_after_middle_column_evaluation
+        # add middle multiplier after alpha_beta evaluation, else middle multiplier affects beta cutoff
+        if depth == 0:
+            for move in max_move_list_first_level:
+                move_after_middle_column_evaluation = self.increaseMoveScoreIfMiddleColumn(move)
+                print('Top level score and column:', move_after_middle_column_evaluation.score,
+                      move_after_middle_column_evaluation.column)
+                if move_after_middle_column_evaluation.score > max_move.score:
+                    max_move = move
         return max_move
 
     cdef Move min_turn_alpha_beta(self, int depth, list board, Player ai_player,
@@ -75,7 +81,6 @@ cdef class AlphaBetaAICopy(GameMinmaxAI):
         # end recursion if depth is reached or no moves possible
         if depth == settings.MAX_DEPTH_AB or len(potential_moves) == 0 or self.did_someone_win(
                 board):
-            #print('ret min', self.evaluate_board(board, ai_player, depth), first_round_column)
             return Move(self.evaluate_board(board, ai_player, depth), first_round_column)
         cdef Move min_move = Move(beta, first_round_column)
         cdef Move max_move
@@ -85,7 +90,6 @@ cdef class AlphaBetaAICopy(GameMinmaxAI):
             if max_move.score < min_move.score:
                 min_move = max_move
                 if min_move.score <= alpha:
-                    #print('break alpha', max_move.score)
                     break
         return min_move
 

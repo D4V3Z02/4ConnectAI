@@ -12,7 +12,9 @@ This is a fork of an existing python-implementation of Connect Four from https:/
 
 ## Prerequisites
 
-Python 3.6
+- Python 3.6
+- VC 2015 C++ Compiler if you are on windows.
+- Linux is fine with the gcc compiler which comes with nearly every Linux-distribution.
 
 ## Installation
 

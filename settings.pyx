@@ -55,8 +55,6 @@ cdef short FPS = 30
 cdef short IMAGES_SIDE_SIZE = 80
 cdef short COLS = 7
 cdef short ROWS = 6
-#cdef short COLS = 4
-#cdef short ROWS = 4
 
 cdef short COLUMN_CHOOSING_MARGIN_TOP = 50
 cdef short BOARD_MARGIN_TOP = IMAGES_SIDE_SIZE + COLUMN_CHOOSING_MARGIN_TOP
