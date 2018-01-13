@@ -5,10 +5,10 @@ This is a fork of an existing python-implementation of Connect Four from https:/
 ## Improvements:
 - Added faster win-condition checking
 - Optimized Python Code with Cython
-- Added an AI which uses the MinMax-Algorithm
-- Added an AI which uses the MinMax-Algorithm by copying its boards
-- Added an optimized AI which uses the MinMax-Algorithm with Alpha-Beta pruning
-- Added an optimized AI which uses the MinMax-Algorithm with Alpha-Beta pruning by copying its boards
+- Added an AI which uses the MinMax-Algorithm with search depth 5
+- Added an AI which uses the MinMax-Algorithm by copying boards with search depth 5
+- Added an optimized AI which uses the MinMax-Algorithm with Alpha-Beta pruning and search depth 7
+- Added an optimized AI which uses the MinMax-Algorithm by copying boards with Alpha-Beta pruning and search depth 7
 
 ## Prerequisites
 
