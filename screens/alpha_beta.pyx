@@ -8,7 +8,7 @@ from screens.minmax_ai cimport GameMinmaxAI as GameMinmaxAI
 from screens.ai cimport Move as Move
 from screens.ai cimport PotentialMove as PotentialMove
 from cpython cimport bool
-
+cimport cython
 
 cdef class AlphaBetaAI(GameMinmaxAI):
     def __init__(self, app):
@@ -26,6 +26,8 @@ cdef class AlphaBetaAI(GameMinmaxAI):
         return self.max_turn_alpha_beta(0, self.copy_board(board), ai_player, -1, -self.BIG_VALUE,
                                         self.BIG_VALUE)
 
+    @cython.boundscheck(False)
+    @cython.wraparound(False)
     cdef Move max_turn_alpha_beta(self, int depth, list board, Player ai_player,
                                   short first_round_column, long alpha, long beta):
         self.turns_analyzed_by_ai += 1
@@ -69,6 +71,8 @@ cdef class AlphaBetaAI(GameMinmaxAI):
                     max_move = move
         return max_move
 
+    @cython.boundscheck(False)
+    @cython.wraparound(False)
     cdef Move min_turn_alpha_beta(self, int depth, list board, Player ai_player,
                                   short first_round_column, long alpha, long beta):
         self.turns_analyzed_by_ai += 1

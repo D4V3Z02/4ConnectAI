@@ -8,7 +8,7 @@ import screens.ai as ai
 from cpython cimport bool
 from screens.ai cimport Move as Move
 from screens.ai cimport PotentialMove as PotentialMove
-
+cimport cython
 
 cdef class GameMinmaxAICopy(ai.AIGame):
     def __init__(self, app):
@@ -25,6 +25,8 @@ cdef class GameMinmaxAICopy(ai.AIGame):
         self.turns_analyzed_by_ai = 0
         return self.max_turn(0, self.copy_board(board), ai_player, -1)
 
+    @cython.boundscheck(False)
+    @cython.wraparound(False)
     cdef Move max_turn(self, int depth, list board, Player ai_player, short first_round_column):
         self.turns_analyzed_by_ai += 1
         # make all possible moves for the current player
@@ -54,6 +56,8 @@ cdef class GameMinmaxAICopy(ai.AIGame):
                 move = min_move
         return move
 
+    @cython.boundscheck(False)
+    @cython.wraparound(False)
     cdef Move min_turn(self, int depth, list board, Player ai_player, short first_round_column):
         self.turns_analyzed_by_ai += 1
         cdef list child_board, potential_moves = []

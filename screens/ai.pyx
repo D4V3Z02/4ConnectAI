@@ -7,7 +7,7 @@ import sys
 import time
 from cpython cimport bool
 from objects cimport Player
-
+cimport cython
 
 cdef class AIGame(game.Game):
     """
@@ -43,6 +43,8 @@ cdef class AIGame(game.Game):
         self.status_text = self.current_player.name + ' player\'s turn'
         self.status_color = self.current_player.color
 
+    @cython.boundscheck(False)
+    @cython.wraparound(False)
     cdef update_ai_player(self):
         """
         Decides in which column the ai places the chip and places it.
@@ -51,9 +53,11 @@ cdef class AIGame(game.Game):
         move = self.min_max(self.board, settings.MAX_DEPTH, self.yellow_player)
         best_move, highest_move_score = move.column, move.score
         self.place_chip_ai(best_move)
-        print('ai turn took',  time.time() - t1)
+        print('ai turn took', time.time() - t1)
         print('Move Chosen:', best_move, 'Move Score', highest_move_score)
 
+    @cython.boundscheck(False)
+    @cython.wraparound(False)
     cdef list copy_board(self, list board):
         """
         Copy a board in for of nested lists. Does not copy the instances of chips elements in the board
@@ -63,8 +67,11 @@ cdef class AIGame(game.Game):
         """
         return [x[:] for x in board]
 
+    @cython.boundscheck(False)
+    @cython.wraparound(False)
     cdef object generate_right_header_text(self):
-        return self.normal_font.render('Ai evaluated: ' + str(self.turns_analyzed_by_ai) + ' turns', True, settings.Colors.WHITE.value)
+        return self.normal_font.render('Ai evaluated: ' + str(self.turns_analyzed_by_ai) + ' turns',
+                                       True, settings.Colors.WHITE.value)
 
     cdef Move increaseMoveScoreIfMiddleColumn(self, Move move):
         """
@@ -74,10 +81,13 @@ cdef class AIGame(game.Game):
         :return: move with increased score.
         """
         cdef short boarder_size = 2
-        if move.column > int(settings.COLS / 2) - boarder_size and move.column < int(settings.COLS / 2) + boarder_size:
+        if move.column > int(settings.COLS / 2) - boarder_size and move.column < int(
+                settings.COLS / 2) + boarder_size:
             move.score = move.score * settings.MIDDLE_MULTIPLIER
         return move
 
+    @cython.boundscheck(False)
+    @cython.wraparound(False)
     cpdef void place_chip_ai(self, int column):
         """
         places a chip in the board of the game logic.
@@ -88,7 +98,6 @@ cdef class AIGame(game.Game):
         for i in range(column):
             self.move_chip_right()
         self.place_chip()
-
     cpdef bool is_ai_playing(self):
         return self.current_player.id == 2
 
@@ -104,6 +113,8 @@ cdef class AIGame(game.Game):
             move_score = settings.CHIP_COUNT_4_MULTIPLIER
         return move_score
 
+    @cython.boundscheck(False)
+    @cython.wraparound(False)
     cdef long evaluate_columns(self, list board, Player current_player):
         cdef short x = 0, y = 0, consecutive_chips = 0
         cdef long move_score = 0
@@ -124,6 +135,8 @@ cdef class AIGame(game.Game):
             move_score += self.get_move_score(consecutive_chips, x)
         return move_score
 
+    @cython.boundscheck(False)
+    @cython.wraparound(False)
     cdef long evaluate_rows(self, list board, Player current_player):
         cdef short x = 0, y = 0, consecutive_chips = 0
         cdef long move_score = 0
@@ -144,6 +157,8 @@ cdef class AIGame(game.Game):
             move_score += self.get_move_score(consecutive_chips, x)
         return move_score
 
+    @cython.boundscheck(False)
+    @cython.wraparound(False)
     cdef long evaluate_board(self, list board, Player ai_player, short depth):
         """Scores the board for the ai player"""
         cdef int move_score = self.evaluate_columns(board, ai_player)
@@ -173,11 +188,13 @@ cdef class AIGame(game.Game):
                                                                       ai_player)
             move_score += self.get_move_score(consecutive_chips, x)
         if depth <= 2 and self.did_player_win(board, self.red_player):
-           move_score = move_score - self.BIG_VALUE
+            move_score = move_score - self.BIG_VALUE
         if depth <= 2 and self.did_player_win(board, self.yellow_player):
-           move_score = self.BIG_VALUE
+            move_score = self.BIG_VALUE
         return move_score
 
+    @cython.boundscheck(False)
+    @cython.wraparound(False)
     cdef bool did_someone_win(self, list board):
         cdef bool ai_won = self.did_player_win(board, self.yellow_player)
         cdef bool human_player_won = self.did_player_win(board, self.red_player)
@@ -185,6 +202,8 @@ cdef class AIGame(game.Game):
             return True
         return False
 
+    @cython.boundscheck(False)
+    @cython.wraparound(False)
     cdef bool did_player_win(self, list board, Player current_player):
         cdef short boarder = 4
         # Check each columns from left to right
@@ -248,6 +267,8 @@ cdef class AIGame(game.Game):
                 return True
         return False
 
+    @cython.boundscheck(False)
+    @cython.wraparound(False)
     cdef int count_consecutive_diagonal_chips(self, int consecutive_chips, previous_chip, int x,
                                               int y, direction,
                                               list board, Player current_player):
@@ -268,6 +289,8 @@ cdef class AIGame(game.Game):
         return self.count_consecutive_diagonal_chips(consecutive_chips, previous_chip, x, y,
                                                      direction, board, current_player)
 
+    @cython.boundscheck(False)
+    @cython.wraparound(False)
     cdef tuple compute_direction_pos(self, int x, int y, direction):
         x = x + abs(direction[0]) if direction[0] > 0 else x - abs(direction[0])
         y = y + abs(direction[1]) if direction[1] > 0 else y - abs(direction[1])
@@ -282,5 +305,4 @@ cdef class PotentialMove:
     def __init__(self, board, column, row=0):
         self.board = board
         self.column = column
-        self.row_stop=row
-
+        self.row_stop = row
