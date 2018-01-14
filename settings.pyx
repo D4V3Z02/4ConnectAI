@@ -47,7 +47,7 @@ class NetworkEngineMode(Enum):
 
 # When frozen by PyInstaller, the path to the resources is different
 RESOURCES_ROOT = 'resources' if getattr(sys, 'frozen', False) else 'resources'
-VERSION = '1.2'
+VERSION = '0.1'
 LAN_IDENTIFIER = '51af46a9396f46cdae0eedc4efa9d7a1'
 
 cdef list MUSIC_LIST = ['techno_dreaming.wav', 'techno_celebration.wav', 'electric_rain.wav', 'snake_trance.wav']
