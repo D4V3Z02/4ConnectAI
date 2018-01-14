@@ -51,7 +51,6 @@ cdef class AIGame(game.Game):
         return self.normal_font.render('Ai evaluated: ' + str(self.turns_analyzed_by_ai) + ' turns', True, settings.Colors.WHITE.value)
 
     cdef Move increaseMoveScoreIfMiddleColumn(self, Move move):
-        #print(int(settings.COLS / 2) - 2, int(settings.COLS / 2) + 2)
         cdef short boarder_size = 2
         if move.column > int(settings.COLS / 2) - boarder_size and move.column < int(settings.COLS / 2) + boarder_size:
             move.score = move.score * settings.MIDDLE_MULTIPLIER
