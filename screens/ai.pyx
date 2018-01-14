@@ -44,6 +44,9 @@ cdef class AIGame(game.Game):
         self.status_color = self.current_player.color
 
     cdef update_ai_player(self):
+        """
+        Decides in which column the ai places the chip and places it.
+        """
         t1 = time.time()
         move = self.min_max(self.board, settings.MAX_DEPTH, self.yellow_player)
         best_move, highest_move_score = move.column, move.score
