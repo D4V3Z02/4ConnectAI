@@ -4,6 +4,11 @@ import sys
 import gui
 import utils
 from cpython cimport bool
+import configparser
+
+CONNECT_FOUR_KEY = 'connectfour'
+DEPTH_KEY = 'depth'
+AB_DEPTH_KEY = 'ab_depth'
 
 
 class GuiTheme(gui.DefaultTheme):
@@ -50,7 +55,8 @@ RESOURCES_ROOT = 'resources' if getattr(sys, 'frozen', False) else 'resources'
 VERSION = '0.1'
 LAN_IDENTIFIER = '51af46a9396f46cdae0eedc4efa9d7a1'
 
-cdef list MUSIC_LIST = ['techno_dreaming.wav', 'techno_celebration.wav', 'electric_rain.wav', 'snake_trance.wav']
+cdef list MUSIC_LIST = ['techno_dreaming.wav', 'techno_celebration.wav', 'electric_rain.wav',
+                        'snake_trance.wav']
 cdef short FPS = 30
 cdef short IMAGES_SIDE_SIZE = 80
 cdef short COLS = 7
@@ -66,8 +72,19 @@ cdef dict DEFAULT_CONFIG = {
     'master_server_endpoint': 'https://cfms.epoc.fr/api/',
     'sounds_volume': 0.1,
     'music_volume': 0.2,
-    'game_name': ''
+    'game_name': '',
+    DEPTH_KEY: 5,
+    AB_DEPTH_KEY: 6
 }
+
+cdef dict get_config():
+    config = configparser.ConfigParser(defaults=DEFAULT_CONFIG,
+                                       interpolation=None)
+    config.read(CONFIG_FILE)
+    return dict(config)
+
+cdef dict config = get_config()
+cdef dict connect_four_section = dict(config[CONNECT_FOUR_KEY])
 cdef str PLAYER_RED_NAME = 'RED'
 cdef short PLAYER_RED_ID = 1
 cdef str PLAYER_YELLOW_NAME = 'YELLOW'
@@ -76,8 +93,8 @@ cdef bool EMPTY_SYMBOL = False
 cdef str RED_CHIP_IMAGE = 'red_chip.png'
 cdef str YELLOW_CHIP_IMAGE = 'yellow_chip.png'
 cdef str GAME_NAME = 'AI Connect Four v'
-cdef short MAX_DEPTH = 5
-cdef short MAX_DEPTH_AB = 7
+cdef short MAX_DEPTH = int(connect_four_section[DEPTH_KEY])
+cdef short MAX_DEPTH_AB = int(connect_four_section[AB_DEPTH_KEY])
 cdef short MIDDLE_MULTIPLIER = 2
 cdef long CHIP_COUNT_1_MULTIPLIER = 10
 cdef long CHIP_COUNT_2_MULTIPLIER = 100
