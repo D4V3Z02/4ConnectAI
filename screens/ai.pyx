@@ -10,6 +10,9 @@ from objects cimport Player
 
 
 cdef class AIGame(game.Game):
+    """
+    Abstract baseclass for ai algorithms
+    """
 
     def __init__(self, app):
         if (app is None):
@@ -18,6 +21,10 @@ cdef class AIGame(game.Game):
         game.Game.__init__(self, app)
 
     cpdef update_while_playing(self):
+        """
+        Does the update-handling for the human and ai player.
+        :return: void
+        """
         if not self.current_player_chip:
             self.current_player_chip = self.current_player.chip()
             self.chips.add(self.current_player_chip)
@@ -45,18 +52,35 @@ cdef class AIGame(game.Game):
         print('Move Chosen:', best_move, 'Move Score', highest_move_score)
 
     cdef list copy_board(self, list board):
+        """
+        Copy a board in for of nested lists. Does not copy the instances of chips elements in the board
+        since only their order in the list itself matters.
+        :param board: the board to copy
+        :return: the copied board
+        """
         return [x[:] for x in board]
 
     cdef object generate_right_header_text(self):
         return self.normal_font.render('Ai evaluated: ' + str(self.turns_analyzed_by_ai) + ' turns', True, settings.Colors.WHITE.value)
 
     cdef Move increaseMoveScoreIfMiddleColumn(self, Move move):
+        """
+        Increase the score of the passed move if it's column is in the middle. The passed element
+        is not copied. The method therefore mutates the passed element.
+        :param move: move to eventually increase.
+        :return: move with increased score.
+        """
         cdef short boarder_size = 2
         if move.column > int(settings.COLS / 2) - boarder_size and move.column < int(settings.COLS / 2) + boarder_size:
             move.score = move.score * settings.MIDDLE_MULTIPLIER
         return move
 
     cpdef void place_chip_ai(self, int column):
+        """
+        places a chip in the board of the game logic.
+        :param column: column to place the chip in
+        :return: void
+        """
         cdef i = 0
         for i in range(column):
             self.move_chip_right()
