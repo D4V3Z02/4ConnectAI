@@ -17,3 +17,4 @@ mkdir ./dist/connectfour_linux/screens
 find ./screens -name \*.so -exec cp {} ./dist/connectfour_linux/screens \;
 find ./screens -name \*.py -exec cp {} ./dist/connectfour_linux/screens \;
 cp **.py ./dist/connectfour_linux/
+cp **.ini ./dist/connectfour_linux/
