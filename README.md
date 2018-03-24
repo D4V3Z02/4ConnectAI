@@ -17,8 +17,8 @@ This is a fork of an existing python-implementation of Connect Four from https:/
 
 ## Prerequisites
 
-- Python 3.6
-- VC 2015 C++ Compiler if you are on windows.
+- Python 3.6 https://www.anaconda.com/download/
+- VC 2015 C++ Compiler if you are on windows. http://go.microsoft.com/fwlink/?LinkId=691126 (vcvarsall.bat + compiler, default options in installer are enough)
 - Linux is fine with the gcc compiler which comes with nearly every Linux-distribution.
 
 ## Installation
